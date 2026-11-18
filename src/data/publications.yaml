@@ -1,10 +1,11 @@
 # 研究頁（/research）
 #
+# me         自己在論文上的名字（各種寫法），作者列表裡會加粗並加上 *
 # interests  研究方向（左欄）
 # journals / conferences  期刊 / 會議論文，各自由新到舊排；每篇欄位如下：
 #
 # title    論文標題（必填）
-# authors  作者（必填），自己的名字會自動加粗，例如 "Jyun-An Chen, Xxx Wang"
+# authors  作者（必填），用「, 」或「、」分隔，例如 "Jyun-An Chen, Xxx Wang" 或 "陳俊安、王小明"
 # venue    期刊 / 會議名稱（必填），例如 "IEEE Transactions on ..."、"ICPP 2026"
 # year     年份
 # note     補充，例如 Best Paper Award、Accepted、Under Review
@@ -22,6 +23,10 @@
 #       - label: DOI
 #         href: https://doi.org/xxx
 
+me:
+  - 陳俊安
+  - Jyun-An Chen
+
 interests:
   - 演算法
   - 資料結構
@@ -30,4 +35,11 @@ interests:
 
 journals: []
 
-conferences: []
+conferences:
+  - title: 基於智慧城市的相似度演算法優劣分析
+    authors: 陳俊安、黃翊銘、楊孟憲、姚谷伝、洪志菁
+    venue: 第二十一屆離島資訊與應用研討會 Conference on Information Technology and Application in Outlying Islands (ITAOI 2023)
+
+  - title: 綠能 IoT 溫度檢測裝置應用於漁塭場域實踐
+    authors: 陳靖勳、黃翊銘、吳冠昱、陳宥任、洪志菁、陳俊安
+    venue: 第二十一屆離島資訊與應用研討會 Conference on Information Technology and Application in Outlying Islands (ITAOI 2023)

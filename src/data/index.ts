@@ -177,11 +177,13 @@ const publications = load(
   'publications.yaml',
   publicationsRaw,
   z.object({
+    me: z.array(z.string()).default([]),
     interests: z.array(z.string()).default([]),
     journals: z.array(publication).default([]),
     conferences: z.array(publication).default([]),
   }),
 );
+export const RESEARCH_ME = publications.me;
 export const RESEARCH_INTERESTS = publications.interests;
 export const JOURNALS = publications.journals;
 export const CONFERENCES = publications.conferences;
