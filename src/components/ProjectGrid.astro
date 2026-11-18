@@ -1,0 +1,84 @@
+---
+import type { Project } from '../data';
+
+interface Props {
+  projects: Project[];
+  columns?: 2 | 3 | 4;
+}
+const { projects, columns = 2 } = Astro.props;
+---
+
+<div class="projects" style={`--cols:${columns}`}>
+  {
+    projects.map((p) => (
+      <article>
+        <div class="top">
+          <h3>{p.name}</h3>
+          {(p.kind || p.period) && <span class="label purple">{p.kind ?? p.period}</span>}
+        </div>
+        <p>{p.description}</p>
+        {p.tech && <div class="tech mono muted">{p.tech.join(' / ')}</div>}
+        {p.links && (
+          <div class="links">
+            {p.links.map((l) => (
+              <a href={l.href} target="_blank" rel="noopener">
+                {l.label} ↗
+              </a>
+            ))}
+          </div>
+        )}
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    gap: 0 28px;
+  }
+  article {
+    display: flex;
+    flex-direction: column;
+    padding: 4px 0 22px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 22px;
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  h3 {
+    margin: 0;
+    font-size: 1.08rem;
+  }
+  p {
+    margin: 6px 0 10px;
+    font-size: 0.94rem;
+    color: var(--text-muted);
+    flex: 1;
+  }
+  .links {
+    margin-top: 6px;
+    display: flex;
+    gap: 14px;
+    font-size: 0.9rem;
+  }
+  .links a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  @media (max-width: 900px) {
+    .projects {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 560px) {
+    .projects {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

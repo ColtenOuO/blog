@@ -1,0 +1,37 @@
+# 個人基本資料：首頁自我介紹、經歷頁左欄、頁尾連結都讀這裡
+#
+# avatar  照片檔名，放在 src/assets/profile/ 裡
+# facts   首頁自我介紹下方的小表格（label 建議 2 個字）
+
+name: Jyun-An Chen
+nickname: Colten
+headline: Competitive Programmer · CS Educator · Open Source Contributor
+avatar: avatar.jpg
+
+intro:
+  - 嗨，我是 Colten。目前是陽明交通大學資科工所碩士生，已通過逕讀博士，2027 年 2 月起成為博士生，在網際網路與行動服務實驗室（IMS Lab）；大學畢業於成大資工，以競技程式特殊選才入學。
+  - 熟悉競技程式、演算法與資料結構，最近在研究編譯器、資料庫系統，以及分散式／平行計算。這裡記錄我學到的東西，也放一些旅行和生活的片段。
+
+facts:
+  - label: 現在
+    value: 陽明交大 資科工所 · IMS Lab（2027.02 起逕博）
+  - label: 之前
+    value: 成大 資工系 2022 – 2026
+  - label: 興趣
+    value: 競技程式、編譯器、資料庫、分散式系統
+
+# 競程帳號：Codeforces 的 rank / rating 會在 build 時自動向 Codeforces 更新，這裡是備援
+cp:
+  - site: Codeforces
+    handle: ColtenOuO
+    rank: Expert
+    rating: 1637
+    url: https://codeforces.com/profile/ColtenOuO
+
+socials:
+  - label: GitHub
+    href: https://github.com/ColtenOuO
+  - label: LinkedIn
+    href: https://www.linkedin.com/in/jyun-an-chen-808218179/
+  - label: Email
+    href: mailto:jun930436@gmail.com

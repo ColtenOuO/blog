@@ -1,0 +1,77 @@
+---
+// 隨機顯示一張旅行照片（src/assets/photos/）；同一個瀏覽分頁內固定同一張
+// 還沒放旅行照片時，改用個人照片（src/assets/profile/）
+import { getImage } from 'astro:assets';
+import { getPhotos } from '../utils/photos';
+import { avatar } from '../utils/avatar';
+
+interface Props {
+  class?: string;
+  caption?: boolean;
+}
+const { class: cls, caption = true } = Astro.props;
+const photos = await getPhotos();
+const fallback = !photos.length && avatar ? (await getImage({ src: avatar, width: 1200, format: 'webp' })).src : undefined;
+const first = photos[0];
+---
+
+{
+  first ? (
+    <figure class:list={['photo', cls]} data-photos={JSON.stringify(photos)}>
+      <img src={first.src} alt={first.caption} />
+      {caption && <figcaption class="mono">{first.caption}</figcaption>}
+    </figure>
+  ) : (
+    <figure class:list={['photo', cls]}>
+      {fallback ? <img src={fallback} alt="" /> : <div class="ph" />}
+    </figure>
+  )
+}
+
+<script is:inline>
+  document.querySelectorAll('figure.photo[data-photos]:not([data-done])').forEach((fig) => {
+    fig.dataset.done = '1';
+    const list = JSON.parse(fig.dataset.photos);
+    let i = NaN;
+    try {
+      const s = sessionStorage.getItem('photo-index');
+      if (s !== null) i = Number(s);
+    } catch {}
+    if (!(Number.isInteger(i) && i >= 0 && i < list.length)) {
+      i = Math.floor(Math.random() * list.length);
+      try { sessionStorage.setItem('photo-index', String(i)); } catch {}
+    }
+    const img = fig.querySelector('img');
+    img.src = list[i].src;
+    img.alt = list[i].caption;
+    const cap = fig.querySelector('figcaption');
+    if (cap) cap.textContent = list[i].caption;
+  });
+</script>
+
+<style>
+  .photo {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  img,
+  .ph {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    object-fit: cover;
+    display: block;
+    border-radius: var(--radius);
+  }
+  .ph {
+    background: var(--code-bg);
+  }
+  figcaption {
+    margin-top: 8px;
+    color: var(--text-muted);
+  }
+  figcaption::before {
+    content: '— ';
+  }
+</style>

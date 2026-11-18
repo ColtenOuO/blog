@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageBanner from '../../components/PageBanner.astro';
+import { getPosts, tagUrl } from '../../utils/posts';
+
+const posts = await getPosts();
+const counts = new Map<string, number>();
+posts.forEach((p) => p.data.tags.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)));
+const tags = [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+---
+
+<BaseLayout title="標籤">
+  <PageBanner title="標籤" en="Tags" subtitle={`${tags.length} 個標籤`} />
+  <ul class="tags">
+    {
+      tags.map(([tag, n]) => (
+        <li>
+          <a href={tagUrl(tag)}>{tag}</a>
+          <span class="mono muted">{n}</span>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
+
+<style>
+  .tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 4 180px;
+    column-gap: 40px;
+  }
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--rule);
+    break-inside: avoid;
+  }
+  li a {
+    text-decoration: none;
+  }
+</style>

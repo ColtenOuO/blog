@@ -1,0 +1,74 @@
+# 專案（照這裡的順序顯示）
+#
+# name         專案名稱（必填）
+# description  說明（必填）
+# kind         類型標籤，例如 畢業專題 / 團隊專案 / Side Project
+# tech         使用技術
+# links        連結 [{ label, href }]；GitHub 可簡寫成 github: ColtenOuO/xxx
+# home         true = 顯示在首頁
+
+- name: PHACO
+  kind: 畢業專題
+  home: true
+  description: 以蟻群演算法求解「第 k 小生成樹」。加入類似突變的最佳解擾動機制，並用 AVL tree 維護 k 個候選解，跳脫費洛蒙造成的局部最佳解；再把蟻群迭代平行化到多核心。實驗中正確率與誤差都優於原始蟻群演算法，k 越大差距越明顯。
+  tech: [C++, Parallel Computing, Heuristic Optimization, Graph Algorithms]
+
+- name: AlgoPilot
+  kind: 團隊專案
+  home: true
+  description: AI 驅動的 VS Code 擴充套件，邊寫程式邊給出 code review、邊界測資與 crash 分析，支援 7 種語言。後端以 FastAPI + Celery + RabbitMQ 串接 Ollama / OpenAI 做非同步 LLM 靜態分析。獲 2025 AMD AI Agent Online Hackathon 季軍。
+  tech: [TypeScript, FastAPI, PostgreSQL, Celery, RabbitMQ, Redis, Docker, LLM]
+  github: YouSayIsRighTeam/AlgoPilot
+
+- name: NCKU Online Judge
+  kind: Side Project
+  home: true
+  description: 擔任程式設計（二）助教時，為了自動評分作業而做的線上評測系統。以 Celery + Redis 非同步處理評測，並採用 IOI Isolate sandbox 隔離執行使用者程式碼；後來也被南台科大的課程採用。
+  tech: [Python, Docker, PostgreSQL, Redis, Celery]
+  github: ColtenOuO/CK-Judge2
+
+- name: TurkeyPOS
+  kind: Side Project
+  home: true
+  description: 火雞肉飯店的點餐 POS：收銀點餐、廚房後台即時接單、LINE 預訂餐點，並提供分店管理與每日營業數據分析。
+  tech: [FastAPI, React, TypeScript, PostgreSQL]
+  github: ColtenOuO/TurkeyPOS
+
+- name: TJOY 社群平台
+  kind: 梅竹黑客松
+  description: 梅竹黑客松台積電組題目：幫新進員工融入公司的企業內部社群平台。我負責 RabbitMQ 與活動媒合系統，用開源 embedding model 把使用者資料轉成向量，以餘弦相似度推薦可能感興趣的活動。
+  tech: [RabbitMQ, Embedding, Recommendation]
+  github: zhihao1021/tjoy
+
+- name: 肯德基優惠代碼獵人
+  kind: 課程專題
+  description: 定期爬取所有肯德基優惠代碼，把「怎麼組合最划算」當成背包問題，用動態規劃算出最佳購買策略並提供 API。
+  tech: [Java, Spring Boot, MongoDB, Dynamic Programming]
+  github: ColtenOuO/KFCalculater-2.0
+  links:
+    - label: 簡報
+      href: https://docs.google.com/presentation/d/1YFj7baHY7d6xws61ciy84Xav-LpWbo-XU2txwFs-N7M/edit?usp=sharing
+
+- name: Auto Student Feedback
+  kind: Side Project
+  description: 自動填寫成大教學評鑑的 Chrome 擴充套件，省去學生重複的手動作業。
+  tech: [JavaScript, Chrome Extension API]
+  github: ColtenOuO/Auto-Student-Feedback-NCKU
+
+- name: Discord 查課機器人
+  kind: Side Project
+  description: 以動態網頁爬蟲定時抓取成大選課系統資料，在 Discord 群組裡用指令就能查詢課程資訊。
+  tech: [Python, Discord API, Web Scraping]
+  github: ColtenOuO/Discord_BotV2
+
+- name: CP-Hub
+  kind: Side Project
+  description: 一站式競技程式家教平台，結合遊戲化的抽題機制。
+  tech: [Python]
+  github: ColtenOuO/CP-Hub
+
+- name: Oranges
+  kind: Side Project
+  description: 從 0 手搓一個作業系統。
+  tech: [C, Assembly]
+  github: ColtenOuO/Oranges

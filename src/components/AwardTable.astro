@@ -1,0 +1,118 @@
+---
+import OrgLogo from './OrgLogo.astro';
+import type { Award } from '../data';
+
+interface Props {
+  awards: Award[];
+}
+const { awards } = Astro.props;
+---
+
+<ul class="awards">
+  {
+    awards.map((a) => (
+      <li>
+        <OrgLogo logo={a.logo} name={a.name} size={34} icon={a.icon ?? 'trophy'} />
+        <div class="body">
+          <div class="name">{a.name}</div>
+          {(a.date || a.note) && (
+            <div class="sub mono muted">{[a.date, a.note].filter(Boolean).join(' · ')}</div>
+          )}
+        </div>
+        <span class:list={['result', a.medal]}>
+          {
+            a.medal && (
+              <svg class="medal" viewBox="0 0 16 22" width="13" height="18" aria-hidden="true">
+                <path class="ribbon" d="M3 0h4l2 6H5zM9 0h4l-2 6H7z" />
+                <circle class="disc" cx="8" cy="14" r="6.5" />
+                <circle class="ring" cx="8" cy="14" r="4" />
+              </svg>
+            )
+          }
+          {a.result}
+        </span>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .awards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  li:first-child {
+    padding-top: 2px;
+  }
+  .body {
+    flex: 1;
+    min-width: 0;
+    line-height: 1.45;
+  }
+  .name {
+    font-size: 0.95rem;
+  }
+  .sub {
+    margin-top: 2px;
+  }
+  .result {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    white-space: nowrap;
+    text-align: right;
+  }
+  .medal .ribbon {
+    fill: var(--c-blue);
+    opacity: 0.75;
+  }
+  .medal .ring {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.55);
+    stroke-width: 1;
+  }
+  .gold .disc {
+    fill: #e8b30b;
+  }
+  .silver .disc {
+    fill: #a3adb8;
+  }
+  .bronze .disc {
+    fill: #c9773a;
+  }
+  .gold {
+    color: #b58700;
+  }
+  .silver {
+    color: #66717e;
+  }
+  .bronze {
+    color: #a95a22;
+  }
+  :global(:root[data-theme='dark']) .gold {
+    color: #f3c845;
+  }
+  :global(:root[data-theme='dark']) .silver {
+    color: #c3ccd6;
+  }
+  :global(:root[data-theme='dark']) .bronze {
+    color: #e3955c;
+  }
+  @media (max-width: 480px) {
+    .result {
+      white-space: normal;
+      max-width: 40%;
+    }
+  }
+</style>

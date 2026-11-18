@@ -1,0 +1,172 @@
+---
+// 履歷頁：用 pdf.js 把 public/resume.pdf 直接畫在網頁上（手機也能看），連結可點
+// 更新履歷：把新的 PDF 覆蓋到 public/resume.pdf 即可
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PROFILE } from '../data';
+import { SECTIONS } from '../config';
+
+const PDF = '/resume.pdf';
+---
+
+<BaseLayout title="履歷" description={`${PROFILE.name} 的履歷`}>
+  <div class="head">
+    <div>
+      <h1 class="page-title">{SECTIONS.resume.zh}<span class="en">{SECTIONS.resume.en}</span></h1>
+      <p class="page-subtitle">{PROFILE.name} ({PROFILE.nickname})</p>
+    </div>
+    <div class="actions">
+      <a href={PDF} download="Jyun-An-Chen-Resume.pdf" class="btn primary">下載 PDF</a>
+      <a href={PDF} target="_blank" rel="noopener" class="btn">新分頁開啟 ↗</a>
+    </div>
+  </div>
+
+  <div id="pdf" class="pdf" data-src={PDF}>
+    <p class="loading mono muted">載入中…</p>
+    <noscript>
+      <p>需要 JavaScript 才能預覽，請直接 <a href={PDF}>下載 PDF</a>。</p>
+    </noscript>
+  </div>
+</BaseLayout>
+
+<script>
+  import * as pdfjs from 'pdfjs-dist';
+  import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+
+  pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
+
+  const box = document.getElementById('pdf') as HTMLDivElement;
+  const src = box.dataset.src!;
+
+  async function render() {
+    const doc = await pdfjs.getDocument(src).promise;
+    const width = box.clientWidth;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const pages: HTMLElement[] = [];
+
+    for (let n = 1; n <= doc.numPages; n++) {
+      const page = await doc.getPage(n);
+      const base = page.getViewport({ scale: 1 });
+      const viewport = page.getViewport({ scale: width / base.width });
+
+      const wrap = document.createElement('div');
+      wrap.className = 'page';
+      wrap.style.width = `${viewport.width}px`;
+      wrap.style.height = `${viewport.height}px`;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.floor(viewport.width * dpr);
+      canvas.height = Math.floor(viewport.height * dpr);
+      canvas.style.width = `${viewport.width}px`;
+      canvas.style.height = `${viewport.height}px`;
+      wrap.appendChild(canvas);
+
+      await page.render({
+        canvasContext: canvas.getContext('2d')!,
+        viewport,
+        transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : undefined,
+      }).promise;
+
+      // 把 PDF 裡的連結疊在畫面上，讓它們可以點
+      for (const a of await page.getAnnotations()) {
+        if (a.subtype !== 'Link' || !a.url) continue;
+        const [x1, y1, x2, y2] = viewport.convertToViewportRectangle(a.rect);
+        const link = document.createElement('a');
+        link.href = a.url;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.className = 'pdf-link';
+        Object.assign(link.style, {
+          left: `${Math.min(x1, x2)}px`,
+          top: `${Math.min(y1, y2)}px`,
+          width: `${Math.abs(x2 - x1)}px`,
+          height: `${Math.abs(y2 - y1)}px`,
+        });
+        wrap.appendChild(link);
+      }
+      pages.push(wrap);
+    }
+    box.replaceChildren(...pages);
+  }
+
+  render().catch(() => {
+    box.innerHTML = `<p>無法預覽，請直接 <a href="${src}">下載 PDF</a>。</p>`;
+  });
+
+  // 視窗寬度改變時重新繪製
+  let lastWidth = box.clientWidth;
+  let timer: number | undefined;
+  window.addEventListener('resize', () => {
+    clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      if (Math.abs(box.clientWidth - lastWidth) < 20) return;
+      lastWidth = box.clientWidth;
+      render();
+    }, 250);
+  });
+</script>
+
+<style>
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+    max-width: 860px;
+    margin: 0 auto 28px;
+    padding-bottom: 20px;
+    border-bottom: 4px solid var(--c-orange);
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  .btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .btn.primary:hover {
+    color: #fff;
+    filter: brightness(1.08);
+  }
+  .pdf {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .loading {
+    text-align: center;
+    padding: 80px 0;
+  }
+  .pdf :global(.page) {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+  .pdf :global(canvas) {
+    display: block;
+  }
+  .pdf :global(.pdf-link) {
+    position: absolute;
+    border-radius: 2px;
+  }
+  .pdf :global(.pdf-link:hover) {
+    background: rgba(59, 123, 255, 0.12);
+  }
+</style>

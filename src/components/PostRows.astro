@@ -1,0 +1,111 @@
+---
+// 文章列表（條列式）：左邊日期，右邊標題與摘要
+import { CATEGORIES } from '../config';
+import { postUrl, tagUrl, type Post } from '../utils/posts';
+
+interface Props {
+  posts: Post[];
+  compact?: boolean;
+  showCategory?: boolean;
+  empty?: string;
+}
+const { posts, compact = false, showCategory = false, empty = '還沒有文章。' } = Astro.props;
+const sorted = [...posts].sort((a, b) => Number(b.data.pinned) - Number(a.data.pinned));
+const fmt = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+
+{
+  sorted.length ? (
+    <ol class:list={['rows', { compact }]}>
+      {sorted.map((p) => (
+        <li>
+          <time class="mono muted" datetime={p.data.date.toISOString()}>
+            {fmt(p.data.date)}
+          </time>
+          <div class="main">
+            <a href={postUrl(p)} class="title">
+              {p.data.pinned && <span class="pin mono">置頂</span>}
+              {p.data.title}
+            </a>
+            {!compact && p.data.description && <p class="desc">{p.data.description}</p>}
+            {(showCategory || (!compact && p.data.tags.length > 0)) && (
+              <div class="meta">
+                {showCategory && <span class="cat mono" style={`color:${CATEGORIES[p.data.category].color}`}>{CATEGORIES[p.data.category].label}</span>}
+                {!compact &&
+                  p.data.tags.map((t) => (
+                    <a class="tag" href={tagUrl(t)}>
+                      #{t}
+                    </a>
+                  ))}
+              </div>
+            )}
+          </div>
+        </li>
+      ))}
+    </ol>
+  ) : (
+    <p class="muted">{empty}</p>
+  )
+}
+
+<style>
+  .rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    display: grid;
+    grid-template-columns: 7.2em minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  li:first-child {
+    padding-top: 4px;
+  }
+  .compact li {
+    padding: 10px 0;
+  }
+  time {
+    padding-top: 0.25em;
+    white-space: nowrap;
+  }
+  .title {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    line-height: 1.45;
+  }
+  .compact .title {
+    font-size: 1.02rem;
+  }
+  .pin {
+    color: var(--accent);
+    margin-right: 8px;
+    font-family: var(--font-mono);
+    font-weight: 400;
+  }
+  .desc {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: 0.94rem;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    margin-top: 6px;
+  }
+  .cat {
+    color: var(--accent);
+  }
+  @media (max-width: 520px) {
+    li {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+  }
+</style>

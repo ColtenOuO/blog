@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+.DS_Store
+colten.pdf
+博士班有利資料.pdf
+陳俊安備審 臺灣師範大學 .pdf

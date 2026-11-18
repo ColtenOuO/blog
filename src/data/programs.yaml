@@ -1,0 +1,20 @@
+# 計畫（欄位同 jobs.yaml），由新到舊排
+# 顯示時 company（計畫名稱）是標題、role（角色）是副標題
+
+- role: Fellow · Apache Airflow 組
+  company: TAIONE Fellowship Program · 財團法人開源基金會
+  period: 2026.11 – 2027.01
+  logo: taione
+  url: https://taione.org/
+
+- role: 解題講師
+  company: 教育部 智慧創新關鍵人才躍升計畫（ITSA）
+  period: 2023 – 現在
+  logo: moe
+
+- role: 學員
+  company: 臺灣好厲駭 第六屆 · 教育部資訊安全人才培育計畫
+  period: 高中
+  logo: moe
+  bullets:
+    - 參與 Python 程式與資安實務、Python 求解 CTF、Linux 與基礎資安分析等課程

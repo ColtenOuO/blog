@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageBanner from '../components/PageBanner.astro';
+import { CATEGORIES } from '../config';
+import { getPosts, postUrl, type Post } from '../utils/posts';
+
+const posts = await getPosts();
+const byYear = new Map<number, Post[]>();
+for (const p of posts) {
+  const y = p.data.date.getFullYear();
+  byYear.set(y, [...(byYear.get(y) ?? []), p]);
+}
+const fmt = (d: Date) => `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+
+<BaseLayout title="封存">
+  <PageBanner title="封存" en="Archive" subtitle={`全部 ${posts.length} 篇文章`}>
+    <nav class="chips"><a class="chip" href="/tags/">依標籤瀏覽 →</a></nav>
+  </PageBanner>
+  {
+    [...byYear].map(([year, list]) => (
+      <section class="year">
+        <h2>{year}</h2>
+        <ul>
+          {list.map((p) => (
+            <li>
+              <time class="mono muted">{fmt(p.data.date)}</time>
+              <a href={postUrl(p)}>{p.data.title}</a>
+              <span class="cat mono" style={`color:${CATEGORIES[p.data.category].color}`}>{CATEGORIES[p.data.category].label}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</BaseLayout>
+
+<style>
+  .year {
+    display: grid;
+    grid-template-columns: 140px minmax(0, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    line-height: 1.2;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 2px solid var(--rule-strong);
+  }
+  li {
+    display: grid;
+    grid-template-columns: 4em minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  li a {
+    text-decoration: none;
+  }
+  .cat {
+    color: var(--accent);
+  }
+  @media (max-width: 640px) {
+    .year {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+</style>

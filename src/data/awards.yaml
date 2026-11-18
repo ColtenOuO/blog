@@ -1,0 +1,156 @@
+# 競賽與獲獎，分成 university（大學）與 high_school（高中），各自由新到舊排
+# 首頁只顯示大學的部分
+#
+# name     競賽名稱（必填）
+# result   名次 / 結果（必填）
+# date     日期，例如 2025.11
+# note     補充，例如排名 43 / 110
+# medal    gold / silver / bronze，會顯示獎牌圖示
+# logo     src/assets/logos/ 裡的檔名，不含副檔名
+# icon     沒有 logo 時的圖示（預設 trophy）
+
+university:
+  - name: AMD AI Agent Online Hackathon
+    result: 季軍
+    date: 2025.12
+    note: 決賽 20 隊
+    medal: bronze
+    logo: amd
+
+  - name: The 2025 ICPC Asia Taichung Regional Contest
+    result: Bronze Medal Award
+    date: 2025.11
+    note: 43 / 110
+    medal: bronze
+    logo: icpc
+
+  - name: The 2025 ICPC Asia Taiwan Online Programming Contest
+    result: Silver Medal Award
+    date: 2025.09
+    note: 31 / 228
+    medal: silver
+    logo: icpc
+
+  - name: 全國大專電腦軟體設計競賽 (NCPC) 決賽
+    result: 佳作
+    date: 2024.11
+    note: 25 / 152
+    logo: moe
+
+  - name: The 2024 ICPC Asia Taiwan Online Programming Contest
+    result: Bronze Medal Award
+    date: 2024.11
+    note: 43 / 100
+    medal: bronze
+    logo: icpc
+
+  - name: The 2024 ICPC Asia Taiwan Online Programming Contest
+    result: Silver Medal Award
+    date: 2024.09
+    note: 37 / 294
+    medal: silver
+    logo: icpc
+
+  - name: ITSA 程式能力線上自我評量 12 月場
+    result: 全部解出
+    date: 2023.12
+    note: 7 / 7 題
+    logo: moe
+
+  - name: HPE / HPI / Intel Codewars 全國大專程式設計爭霸戰
+    result: 第 6 名
+    date: 2023.10
+    note: 大專組約 30 隊
+    logo: hp
+
+  - name: The 2023 ICPC Asia Taiwan Online Programming Contest
+    result: Bronze Medal Award
+    date: 2023.11
+    note: 73 / 189
+    medal: bronze
+    logo: icpc
+
+  - name: The 2022 ICPC Asia Taoyuan Regional Contest
+    result: Bronze Medal Award
+    date: 2022.11
+    note: 42 / 100
+    medal: bronze
+    logo: icpc
+
+  - name: Meta Hacker Cup
+    result: 晉級 Round 2
+    date: 2022
+    note: 資格賽前 6%、Round 1 前 31%
+    logo: meta
+
+  - name: The 2022 ICPC Asia Taiwan Online Programming Contest
+    result: 榮譽獎
+    date: 2022.09
+    note: 29 / 214
+    logo: icpc
+
+high_school:
+  - name: CPE 大學程式設計能力檢定
+    result: 專業級
+    date: 2021.03
+    note: 5 / 7 題，前 0.8%（19 / 2394）
+    icon: star
+
+  - name: APCS 大學程式設計先修檢測
+    result: 實作 5 級分（滿級分）
+    logo: apcs
+
+  - name: YTP 少年圖靈計畫程式挑戰營（2020、2021、2022）
+    result: 決賽晉級
+    date: 2022.08
+    note: 精誠資訊；2021 年從 200 多隊中晉級前 60 強
+    logo: systex
+
+  - name: 彰化師大未來科技探究與實作競賽 資訊組
+    result: 決賽佳作
+    date: 2022.08
+    logo: ncue
+
+  - name: 台南市優秀青年
+    result: 獲選
+    date: 2022.04
+    note: 台南市政府
+    logo: tainan
+
+  - name: HP Code Wars 全國高中程式設計爭霸戰
+    result: 第 7 名
+    date: 2021.11
+    logo: hp
+
+  - name: T 貓盃基礎資安實務能力競賽 進階實務組
+    result: 優勝
+    date: 2021.04
+    note: CTF 搶旗賽
+    logo: ncku
+
+  - name: 109 學年度數理及資訊學科能力競賽 資訊科 臺灣省第四區複賽
+    result: 佳作
+    date: 2020
+    note: 校內初賽第一名
+    logo: moe
+
+  - name: ITSA 程式能力線上自我評量
+    result: 解出 8 題
+    date: 2020.09
+    note: 8 / 9 題
+    logo: moe
+
+  - name: T 貓盃基礎資安實務能力競賽 高中職組
+    result: 優勝
+    date: 2020.04
+    note: 全國 200 多隊
+    logo: ncku
+
+  - name: 第八屆高一生程式設計排名賽
+    result: 154 分
+    note: 臺南一中主辦，限高一生參加
+
+  - name: TOI 臺灣國際資訊奧林匹亞 線上練習賽 潛力組
+    result: 300 分（滿分）
+    note: 臺師大主辦
+    logo: apcs

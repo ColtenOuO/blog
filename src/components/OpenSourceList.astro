@@ -1,0 +1,165 @@
+---
+// 開源貢獻：每個 repo 一列，點擊連到自己在該 repo 的 merged PR 列表
+import OrgLogo from './OrgLogo.astro';
+import { OPEN_SOURCE } from '../data';
+import { getMergedCounts, mergedPrsUrl } from '../utils/github';
+
+interface Props {
+  compact?: boolean;
+  limit?: number;
+}
+const { compact = false, limit } = Astro.props;
+const live = await getMergedCounts();
+const repos = OPEN_SOURCE.map((r) => ({
+  ...r,
+  merged: live?.[r.repo] ?? r.merged,
+  href: r.href ?? mergedPrsUrl(r.repo),
+}))
+  .sort((a, b) => b.merged - a.merged)
+  .slice(0, limit);
+// 沒指定 logo 時，依序找 src/assets/logos/ 裡的 <repo 名稱>、<組織名稱>
+// 例如 apache/airflow → airflow.png，找不到再用 apache.png
+function logoCandidates(r: { repo: string; logo?: string }) {
+  const [owner, name] = r.repo.split('/');
+  return [r.logo, name, owner].filter(Boolean) as string[];
+}
+const total = repos.reduce((s, r) => s + r.merged, 0);
+---
+
+<div class="os">
+  {
+    !compact && (
+      <p class="summary">
+        在 {repos.length} 個開源專案共有 <strong>{total}</strong> 個 PR / patch 被合併。
+      </p>
+    )
+  }
+  <ul>
+    {
+      repos.map((r) => (
+        <li>
+          <OrgLogo logo={logoCandidates(r)} name={r.repo} size={34} icon="code" />
+          <div class="body">
+            <a class="repo mono" href={r.href} target="_blank" rel="noopener">
+              {r.repo}
+            </a>
+            {r.role && <span class="label green">{r.role}</span>}
+            {!compact && r.note && <div class="note">{r.note}</div>}
+            {!compact && r.links && (
+              <div class="extra">
+                {r.links.map((l) => (
+                  <a href={l.href} target="_blank" rel="noopener">
+                    {l.label} ↗
+                  </a>
+                ))}
+              </div>
+            )}
+            {!compact && r.highlights && (
+              <ul class="prs">
+                {r.highlights.map((h) => (
+                  <li>
+                    <a href={`https://github.com/${r.repo}/pull/${h.pr}`} target="_blank" rel="noopener">
+                      <span class="mono">#{h.pr}</span> {h.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <a class="count" href={r.href} target="_blank" rel="noopener">
+            <b>{r.merged}</b>
+            <span class="mono muted">{r.unit ?? 'merged'}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .summary {
+    margin: 0 0 12px;
+    color: var(--text-muted);
+  }
+  .summary strong {
+    color: var(--c-green);
+    font-size: 1.2em;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .os > ul > li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .os > ul > li:first-child {
+    padding-top: 2px;
+  }
+  .body {
+    flex: 1;
+    min-width: 0;
+    padding-top: 5px;
+  }
+  .repo {
+    font-size: 0.9rem;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .note {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 2px;
+  }
+  .prs {
+    margin-top: 6px;
+    font-size: 0.88rem;
+  }
+  .prs li {
+    padding: 2px 0;
+  }
+  .prs a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .prs a:hover {
+    color: var(--accent);
+  }
+  .prs .mono {
+    color: var(--c-green);
+  }
+  .extra {
+    margin-top: 4px;
+    font-size: 0.86rem;
+  }
+  .extra a {
+    color: var(--c-green);
+    text-decoration: none;
+  }
+  .repo + .label {
+    margin-left: 8px;
+  }
+  .count {
+    flex-shrink: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-top: 3px;
+    text-decoration: none;
+  }
+  .count b {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    color: var(--c-green);
+  }
+  .count span {
+    font-size: 0.72rem;
+  }
+  .count:hover b {
+    text-decoration: underline;
+  }
+</style>

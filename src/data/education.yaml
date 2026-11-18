@@ -1,0 +1,46 @@
+# 學歷（經歷頁左欄）
+#
+# school     學校名稱（必填）
+# school_en  學校英文名稱
+# degree     系所與學位（必填）
+# degree_en  系所與學位英文
+# period     期間（必填）
+# logo       src/assets/logos/ 裡的檔名，不含副檔名
+# lab        實驗室 { name, url }
+# note       補充說明
+
+- school: 國立陽明交通大學 (目前就讀中)
+  school_en: National Yang Ming Chiao Tung University
+  degree: 資訊科學與工程研究所 博士班
+  degree_en: Ph.D. Student in Computer Science and Engineering
+  period: 2027.02 –
+  logo: nycu
+  lab:
+    name: 網際網路與行動服務實驗室 IMS Lab
+    url: https://www.lab117.org/
+  note: 碩士班逕讀博士 · Direct Ph.D. Program
+
+- school: 國立陽明交通大學
+  school_en: National Yang Ming Chiao Tung University
+  degree: 資訊科學與工程研究所 碩士班（實務導向丙組）
+  degree_en: M.S. in Computer Science and Engineering
+  period: 2026.09 – 2027.01
+  logo: nycu
+  lab:
+    name: 網際網路與行動服務實驗室 IMS Lab
+    url: https://www.lab117.org/
+
+- school: 國立成功大學
+  school_en: National Cheng Kung University
+  degree: 資訊工程學系 學士
+  degree_en: B.S. in Computer Science and Information Engineering
+  period: 2022.09 – 2026.06
+  logo: ncku
+  note: 特殊選才甲組（競技程式）入學
+
+- school: 國立新化高級中學
+  school_en: National Hsin-Hua Senior High School
+  degree: 普通科
+  degree_en: High School Diploma
+  period: 2019.09 – 2022.06
+  logo: hhsh

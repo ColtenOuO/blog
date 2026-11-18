@@ -1,0 +1,34 @@
+---
+import { render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+import { getPosts, type Post } from '../../utils/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    // 上一篇 / 下一篇：限同分類
+    props: {
+      post,
+      prev: posts.slice(i + 1).find((p) => p.data.category === post.data.category),
+      next: posts
+        .slice(0, i)
+        .reverse()
+        .find((p) => p.data.category === post.data.category),
+    },
+  }));
+}
+
+interface Props {
+  post: Post;
+  prev?: Post;
+  next?: Post;
+}
+
+const { post, prev, next } = Astro.props;
+const { Content, headings } = await render(post);
+---
+
+<PostLayout post={post} headings={headings} prev={prev} next={next}>
+  <Content />
+</PostLayout>

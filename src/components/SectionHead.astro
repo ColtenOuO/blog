@@ -1,0 +1,24 @@
+---
+// 區塊標題：中文 + 英文附註，右邊可放一個連結
+import { SECTIONS, type SectionKey } from '../config';
+
+interface Props {
+  section: SectionKey;
+  href?: string;
+  linkText?: string;
+  external?: boolean;
+}
+const { section, href, linkText = '全部 →', external = false } = Astro.props;
+const { zh, en } = SECTIONS[section];
+---
+
+<div class="section-head">
+  <h2>{zh}<span class="en">{en}</span></h2>
+  {
+    href && (
+      <a href={href} {...(external ? { target: '_blank', rel: 'noopener' } : {})}>
+        {linkText}
+      </a>
+    )
+  }
+</div>

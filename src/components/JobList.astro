@@ -1,0 +1,103 @@
+---
+import OrgLogo from './OrgLogo.astro';
+import type { Job } from '../data';
+
+interface Props {
+  jobs: Job[];
+  compact?: boolean; // 首頁用：不顯示細節
+  orgFirst?: boolean; // true：單位名稱當標題、角色當副標題（計畫用）
+}
+const { jobs, compact = false, orgFirst = false } = Astro.props;
+---
+
+<ul class="jobs">
+  {
+    jobs.map((j) => {
+      const org = j.url ? (
+        <a href={j.url} target="_blank" rel="noopener">
+          {j.company} ↗
+        </a>
+      ) : (
+        j.company
+      );
+      return (
+        <li>
+          <OrgLogo logo={j.logo} name={j.company} size={compact ? 38 : 46} icon={j.icon ?? 'star'} />
+          <div class="body">
+            <div class="top">
+              <div>
+                <div class="role">{orgFirst ? org : j.role}</div>
+                <div class="company">{orgFirst ? j.role : org}</div>
+              </div>
+              <span class="mono muted">{j.period}</span>
+            </div>
+            {!compact && j.bullets && (
+              <ul class="bullets">
+                {j.bullets.map((b) => (
+                  <li>{b}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .jobs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .jobs > li {
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .jobs > li:first-child {
+    padding-top: 2px;
+  }
+  .body {
+    flex: 1;
+    min-width: 0;
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: baseline;
+  }
+  .top .mono {
+    white-space: nowrap;
+  }
+  .role {
+    font-weight: 700;
+    font-size: 1.02rem;
+  }
+  .company {
+    color: var(--text-muted);
+  }
+  .role a,
+  .company a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .role a:hover,
+  .company a:hover {
+    color: var(--accent);
+  }
+  .jobs + .jobs > li:first-child {
+    padding-top: 14px;
+  }
+  .bullets {
+    margin: 8px 0 0;
+    padding-left: 1.1em;
+    font-size: 0.94rem;
+  }
+  .bullets li::marker {
+    color: var(--c-orange);
+  }
+</style>

@@ -1,0 +1,233 @@
+---
+import 'katex/dist/katex.min.css';
+import { Image } from 'astro:assets';
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import { CATEGORIES } from '../config';
+import { formatDate, postUrl, readingTime, tagUrl, type Post } from '../utils/posts';
+
+interface Props {
+  post: Post;
+  headings: MarkdownHeading[];
+  prev?: Post;
+  next?: Post;
+}
+
+const { post, headings, prev, next } = Astro.props;
+const { title, description, date, updated, category, tags, cover } = post.data;
+const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+<BaseLayout title={title} description={description} image={cover?.src}>
+  <article class="post">
+    <header class="post-head">
+      <p class="meta mono">
+        <a href={`/category/${category}`} class="cat" style={`color:${CATEGORIES[category].color}`}>{CATEGORIES[category].label}</a>
+        <span>{formatDate(date)}</span>
+        {updated && <span>更新於 {formatDate(updated)}</span>}
+        <span>約 {readingTime(post.body)} 分鐘</span>
+      </p>
+      <h1>{title}</h1>
+      {description && <p class="desc">{description}</p>}
+      {
+        tags.length > 0 && (
+          <div class="tags">
+            {tags.map((t) => (
+              <a class="tag" href={tagUrl(t)}>
+                #{t}
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    {cover && <Image src={cover} alt="" width={1400} class="post-cover" loading="eager" />}
+
+    <div class="layout">
+      <div class="prose">
+        <slot />
+      </div>
+      {
+        toc.length >= 2 && (
+          <aside class="toc">
+            <div class="toc-title mono muted">目錄</div>
+            <ul>
+              {toc.map((h) => (
+                <li class={`d${h.depth}`}>
+                  <a href={`#${h.slug}`}>{h.text}</a>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+    </div>
+
+    <nav class="pager">
+      {
+        prev ? (
+          <a href={postUrl(prev)}>
+            <span class="mono muted">← 上一篇</span>
+            <span class="t">{prev.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next && (
+          <a href={postUrl(next)} class="next">
+            <span class="mono muted">下一篇 →</span>
+            <span class="t">{next.data.title}</span>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</BaseLayout>
+
+<script>
+  // 目錄高亮目前閱讀到的段落
+  const links = new Map<string, HTMLAnchorElement>();
+  document.querySelectorAll<HTMLAnchorElement>('.toc a').forEach((a) => {
+    links.set(decodeURIComponent(a.hash.slice(1)), a);
+  });
+  if (links.size) {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          links.forEach((a) => a.classList.remove('active'));
+          links.get(e.target.id)?.classList.add('active');
+        }
+      },
+      { rootMargin: '-80px 0px -70% 0px' },
+    );
+    links.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+  }
+</script>
+
+<style>
+  .post-head {
+    max-width: 760px;
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    color: var(--text-muted);
+    margin: 0 0 12px;
+  }
+  .cat {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  h1 {
+    font-size: clamp(1.8rem, 4.2vw, 2.6rem);
+    margin: 0;
+    line-height: 1.25;
+  }
+  .desc {
+    color: var(--text-muted);
+    font-size: 1.08rem;
+    margin: 12px 0 0;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    margin-top: 14px;
+  }
+  .post-cover {
+    width: 100%;
+    max-height: 520px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-bottom: 40px;
+    display: block;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 720px) 220px;
+    gap: 72px;
+    justify-content: start;
+  }
+  .toc {
+    position: sticky;
+    top: 92px;
+    align-self: start;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    font-size: 0.88rem;
+    border-left: 1px solid var(--rule);
+    padding-left: 18px;
+  }
+  .toc-title {
+    margin-bottom: 8px;
+  }
+  .toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .toc li {
+    margin: 6px 0;
+    line-height: 1.5;
+  }
+  .toc li.d3 {
+    padding-left: 12px;
+  }
+  .toc a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .toc a:hover,
+  .toc a.active {
+    color: var(--accent);
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 720px;
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 2px solid var(--rule-strong);
+  }
+  .pager a {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+  }
+  .pager .t {
+    font-family: var(--font-serif);
+    font-weight: 600;
+  }
+  .pager .next {
+    text-align: right;
+    grid-column: 2;
+  }
+  @media (max-width: 1000px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .toc {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    .pager {
+      grid-template-columns: 1fr;
+    }
+    .pager .next {
+      grid-column: 1;
+    }
+  }
+</style>

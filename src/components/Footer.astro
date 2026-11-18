@@ -1,0 +1,40 @@
+---
+import { SITE } from '../config';
+import { SOCIALS } from '../data';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <span>© {year} {SITE.author}</span>
+    <span class="links">
+      {SOCIALS.map((s) => <a href={s.href} target="_blank" rel="noopener">{s.label}</a>)}
+      <a href="/rss.xml">RSS</a>
+    </span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    color: var(--text-muted);
+    font-size: 0.88rem;
+  }
+  .inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  .links a {
+    text-decoration: none;
+  }
+</style>

@@ -1,0 +1,48 @@
+# 開源貢獻（會依 merged 數量自動由多到少排序）
+#
+# repo        GitHub repo，例如 apache/airflow（必填；非 GitHub 專案就寫名稱）
+# merged      合併數量（必填）。GitHub repo 會在 build 時自動向 GitHub 更新，這裡的數字是備援
+# unit        數量單位，預設 merged；非 GitHub 可寫 patch
+# href        點擊要去的網址；不填則連到你在該 repo 的 merged PR 列表
+# role        角色標籤，例如 Maintainer
+# note        說明
+# logo        src/assets/logos/ 裡的檔名（不含副檔名）。不填會自動找：
+#             <repo 名稱>.png → <組織名稱>.png，例如 apache/airflow 先找 airflow，再找 apache
+# links       額外連結 [{ label, href }]
+# highlights  代表性 PR [{ title, pr }]
+
+- repo: apache/airflow
+  merged: 55
+  note: 改進 API 與資料庫查詢效能、協助新 provider 開發與新版本發布；近幾個月全球前 20 名貢獻者
+  highlights:
+    - title: Fix N+1 query in bulk update for Variables and Pools
+      pr: 71918
+    - title: Reduce memory used when deleting a Dag with a large history
+      pr: 71185
+    - title: Complete the Traditional Chinese UI translations
+      pr: 71019
+    - title: Add SSL cipher list option to the api server
+      pr: 71645
+
+- repo: sysprog21/codetrial
+  merged: 23
+  role: Maintainer
+  note: 成大 jserv 老師設計的 live coding 面試練習平台（MIT 授權、100+ stars）；負責 code review 與 issue 分類，已 review 40+ PRs
+  links:
+    - label: Reviewed PRs
+      href: https://github.com/sysprog21/codetrial/pulls?q=is%3Apr+state%3Aclosed+reviewed-by%3A%40ColtenOuO
+
+- repo: Linux Kernel
+  merged: 1
+  unit: patch
+  logo: linux
+  href: https://patchew.org/linux/20260722044236.6346-1-jun930436@gmail.com/
+  note: 移除文件中標示、但實際上沒有實作的 empty 操作；經維護者 ACK 後合入 Linux 原始碼
+
+- { repo: apache/kafka, merged: 1 }
+- { repo: apache/superset, merged: 1 }
+- { repo: rust-lang/rust, merged: 1 }
+- { repo: llvm/llvm-project, merged: 1 }
+- { repo: duckdb/duckdb, merged: 1 }
+- { repo: vllm-project/vllm, merged: 1 }
+- { repo: tldr-pages/tldr, merged: 1 }

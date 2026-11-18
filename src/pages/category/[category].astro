@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageBanner from '../../components/PageBanner.astro';
+import PostRows from '../../components/PostRows.astro';
+import PostTiles from '../../components/PostTiles.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import { CATEGORIES, type Category } from '../../config';
+import { byCategory, getPosts } from '../../utils/posts';
+
+// tutorial / travel / life 各一頁，另外 notes = 旅遊 + 雜記
+export function getStaticPaths() {
+  return [...Object.keys(CATEGORIES), 'notes'].map((category) => ({ params: { category } }));
+}
+
+const { category } = Astro.params as { category: Category | 'notes' };
+const isNotes = category !== 'tutorial';
+
+const meta =
+  category === 'notes' ? { label: '隨筆', en: 'Notes', description: '旅遊紀錄與生活雜記' } : CATEGORIES[category];
+const posts = await getPosts(category === 'notes' ? byCategory('travel', 'life') : byCategory(category));
+
+// 教學頁右側：標籤統計
+const tagCounts = new Map<string, number>();
+posts.forEach((p) => p.data.tags.forEach((t) => tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1)));
+const tags = [...tagCounts].sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout title={meta.label} description={meta.description}>
+  <PageBanner title={meta.label} en={meta.en} subtitle={`${meta.description} · ${posts.length} 篇`}>
+    {
+      isNotes && (
+        <nav class="chips">
+          <a href="/category/notes" class:list={['chip', { active: category === 'notes' }]}>全部</a>
+          <a href="/category/travel" class:list={['chip', { active: category === 'travel' }]}>旅遊</a>
+          <a href="/category/life" class:list={['chip', { active: category === 'life' }]}>雜記</a>
+        </nav>
+      )
+    }
+  </PageBanner>
+
+  {
+    isNotes ? (
+      <PostTiles posts={posts} />
+    ) : (
+      <div class="grid">
+        <div class="span-8">
+          <PostRows posts={posts} />
+        </div>
+        <aside class="span-4">
+          <SectionHead section="tags" href="/tags/" />
+          <div class="tag-cloud">
+            {tags.map(([t, n]) => (
+              <a href={`/tags/${encodeURIComponent(t)}/`}>
+                {t} <span class="mono muted">{n}</span>
+              </a>
+            ))}
+          </div>
+        </aside>
+      </div>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+  }
+  .tag-cloud a {
+    text-decoration: none;
+  }
+</style>

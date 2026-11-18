@@ -1,0 +1,89 @@
+---
+import OrgLogo from './OrgLogo.astro';
+import type { Item } from '../data';
+
+interface Props {
+  items: Item[];
+  compact?: boolean; // 首頁用：不顯示條列細項
+}
+const { items, compact = false } = Astro.props;
+---
+
+<ul class="items">
+  {
+    items.map((it) => (
+      <li>
+        <OrgLogo logo={it.logo} name={it.title} size={38} icon={it.icon ?? 'people'} />
+        <div class="body">
+          <div class="top">
+            {it.url ? (
+              <a href={it.url} target="_blank" rel="noopener" class="title">
+                {it.title} ↗
+              </a>
+            ) : (
+              <strong class="title">{it.title}</strong>
+            )}
+            {it.period && <span class="mono muted">{it.period}</span>}
+          </div>
+          {it.detail && <div class="detail">{it.detail}</div>}
+          {!compact && it.bullets && (
+            <ul class="bullets">
+              {it.bullets.map((b) => (
+                <li>{b}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .items > li {
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule);
+    line-height: 1.55;
+  }
+  .items > li:first-child {
+    padding-top: 2px;
+  }
+  .body {
+    flex: 1;
+    min-width: 0;
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .title {
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .top .mono {
+    white-space: nowrap;
+  }
+  .detail {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-top: 2px;
+  }
+  .bullets {
+    margin: 4px 0 0;
+    padding-left: 1.1em;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+  .bullets li::marker {
+    color: var(--c-orange);
+  }
+</style>

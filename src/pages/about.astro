@@ -1,0 +1,291 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import AwardTable from '../components/AwardTable.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import ItemList from '../components/ItemList.astro';
+import JobList from '../components/JobList.astro';
+import OrgLogo from '../components/OrgLogo.astro';
+import OpenSourceList from '../components/OpenSourceList.astro';
+import { SECTIONS } from '../config';
+import {
+  AWARDS,
+  AWARDS_HIGH_SCHOOL,
+  COMMUNITY,
+  EDUCATION,
+  JOBS,
+  PROFILE,
+  PROGRAMS,
+  PROJECTS,
+  SOCIALS,
+  TEACHING,
+} from '../data';
+import { avatar } from '../utils/avatar';
+
+const toc = [
+  JOBS.length && { id: 'jobs', s: SECTIONS.jobs },
+  PROGRAMS.length && { id: 'programs', s: SECTIONS.programs },
+  { id: 'awards', s: SECTIONS.awards },
+  { id: 'open-source', s: SECTIONS.openSource },
+  { id: 'projects', s: SECTIONS.projects },
+  { id: 'teaching', s: SECTIONS.teachingCommunity },
+].filter(Boolean) as { id: string; s: { zh: string; en: string } }[];
+---
+
+<BaseLayout title="經歷" description={`${PROFILE.name}：學歷、工作、競賽、開源與教學經歷`}>
+  <div class="grid">
+    <!-- 左：個人資料（獨立捲動） -->
+    <aside class="span-4 side">
+      <div class="scroller">
+        {avatar && <Image src={avatar} alt={PROFILE.name} width={240} height={240} class="avatar" />}
+        <h1>{PROFILE.name} <span class="nick">(<span class="marker">{PROFILE.nickname}</span>)</span></h1>
+        <p class="headline mono">{PROFILE.headline}</p>
+        {PROFILE.intro.map((p) => <p class="intro">{p}</p>)}
+        <div class="links">
+          {SOCIALS.map((s) => <a href={s.href} target="_blank" rel="noopener">{s.label} ↗</a>)}
+        </div>
+        <a href="/resume" class="resume-btn">查看履歷 Résumé →</a>
+
+        <h2 class="small-head c-blue">{SECTIONS.education.zh}<span class="en">{SECTIONS.education.en}</span></h2>
+        <ul class="edu">
+          {
+            EDUCATION.map((e) => (
+              <li>
+                <OrgLogo logo={e.logo} name={e.school} size={42} icon="school" />
+                <div>
+                  <strong>{e.school}</strong>
+                  {e.school_en && <div class="en-line">{e.school_en}</div>}
+                  <div>{e.degree}</div>
+                  {e.degree_en && <div class="en-line">{e.degree_en}</div>}
+                  {e.lab &&
+                    (e.lab.url ? (
+                      <a class="lab" href={e.lab.url} target="_blank" rel="noopener">
+                        {e.lab.name} ↗
+                      </a>
+                    ) : (
+                      <div class="lab">{e.lab.name}</div>
+                    ))}
+                  <div class="mono muted">{e.period}</div>
+                  {e.note && <div class="muted note">{e.note}</div>}
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+
+        <h2 class="small-head c-orange jump-head">{SECTIONS.contents.zh}<span class="en">{SECTIONS.contents.en}</span></h2>
+        <nav class="jump">
+          {
+            toc.map((t) => (
+              <a href={`#${t.id}`}>
+                {t.s.zh} <span class="en">{t.s.en}</span>
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </aside>
+
+    <!-- 右：經歷內容 -->
+    <div class="span-8 content">
+      {
+        JOBS.length > 0 && (
+          <section id="jobs" class="c-purple">
+            <SectionHead section="jobs" />
+            <JobList jobs={JOBS} />
+          </section>
+        )
+      }
+      {
+        PROGRAMS.length > 0 && (
+          <section id="programs" class="c-blue">
+            <SectionHead section="programs" />
+            <JobList jobs={PROGRAMS} orgFirst />
+          </section>
+        )
+      }
+
+      <section id="awards" class="c-orange">
+        <SectionHead section="awards" />
+        <h3 class="sub">{SECTIONS.university.zh}<span class="en">{SECTIONS.university.en}</span></h3>
+        <AwardTable awards={AWARDS} />
+        <h3 class="sub">{SECTIONS.highSchool.zh}<span class="en">{SECTIONS.highSchool.en}</span></h3>
+        <AwardTable awards={AWARDS_HIGH_SCHOOL} />
+      </section>
+
+      <section id="open-source" class="c-green">
+        <SectionHead section="openSource" href="https://github.com/ColtenOuO" linkText="GitHub ↗" external />
+        <OpenSourceList />
+      </section>
+
+      <section id="projects" class="c-yellow">
+        <SectionHead section="projects" />
+        <ProjectGrid projects={PROJECTS} columns={2} />
+      </section>
+
+      <div class="two" id="teaching">
+        <section class="c-blue">
+          <SectionHead section="teaching" />
+          <ItemList items={TEACHING} />
+        </section>
+        <section class="c-pink">
+          <SectionHead section="community" />
+          <ItemList items={COMMUNITY} />
+        </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* 左欄固定在畫面上，內容超過一個螢幕時可以自己捲動 */
+  .scroller {
+    position: sticky;
+    top: 84px;
+    max-height: calc(100vh - 104px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 14px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+  .scroller::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scroller::-webkit-scrollbar-thumb {
+    background: var(--rule);
+    border-radius: 3px;
+  }
+  .avatar {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    border: 4px solid var(--c-yellow);
+  }
+  h1 {
+    font-size: 1.8rem;
+    margin: 16px 0 4px;
+  }
+  .nick {
+    white-space: nowrap;
+  }
+  .headline {
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+  .intro {
+    margin: 0 0 10px;
+    font-size: 0.97rem;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    margin: 14px 0 0;
+  }
+  .links a {
+    text-decoration: none;
+  }
+  .resume-btn {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.92rem;
+    text-decoration: none;
+  }
+  .resume-btn:hover {
+    color: #fff;
+    filter: brightness(1.08);
+  }
+  .small-head {
+    font-size: 1rem;
+    margin: 28px 0 10px;
+    padding-top: 8px;
+    border-top: 4px solid var(--sec);
+  }
+  .edu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .edu li {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+    line-height: 1.55;
+    font-size: 0.95rem;
+  }
+  .edu .lab {
+    display: block;
+    color: var(--c-blue);
+    text-decoration: none;
+  }
+  .edu .en-line {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+  .edu .note {
+    font-size: 0.88rem;
+    margin-top: 2px;
+  }
+  .jump {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-bottom: 8px;
+  }
+  .jump a {
+    text-decoration: none;
+    color: var(--text-muted);
+  }
+  .jump a:hover {
+    color: var(--accent);
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+  .sub {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 18px 0 8px;
+    letter-spacing: 0.08em;
+  }
+  :global(.section-head) + .sub {
+    margin-top: 0;
+  }
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  @media (max-width: 900px) {
+    .scroller {
+      position: static;
+      max-height: none;
+      overflow: visible;
+      padding-right: 0;
+    }
+    .jump,
+    .jump-head {
+      display: none;
+    }
+  }
+  @media (max-width: 640px) {
+    .two {
+      grid-template-columns: 1fr;
+      gap: 56px;
+    }
+  }
+</style>

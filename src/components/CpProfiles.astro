@@ -1,0 +1,98 @@
+---
+// 競程帳號：handle 依 Codeforces rank 上色（跟 Codeforces 網站一樣）
+import { PROFILE } from '../data';
+import { getCodeforces } from '../utils/codeforces';
+
+interface Props {
+  variant?: 'inline' | 'card';
+}
+const { variant = 'inline' } = Astro.props;
+
+const profiles = await Promise.all(
+  PROFILE.cp.map(async (p) => {
+    if (p.site.toLowerCase() !== 'codeforces') return p;
+    const live = await getCodeforces(p.handle);
+    return live ? { ...p, rank: live.rank, rating: live.maxRating } : p;
+  }),
+);
+
+const RANK_COLORS: Record<string, string> = {
+  newbie: '#808080',
+  pupil: '#008000',
+  specialist: '#03a89e',
+  expert: '#3b5bdb',
+  'candidate master': '#aa00aa',
+  master: '#ff8c00',
+  'international master': '#ff8c00',
+  grandmaster: '#e03131',
+  'international grandmaster': '#e03131',
+  'legendary grandmaster': '#e03131',
+};
+const color = (rank?: string) => RANK_COLORS[rank?.toLowerCase() ?? ''] ?? 'var(--text)';
+const title = (s?: string) => s?.replace(/\b\w/g, (c) => c.toUpperCase());
+---
+
+<span class:list={['cp', variant]}>
+  {
+    profiles.map((p) => (
+      <a href={p.url} target="_blank" rel="noopener" class="cp-item">
+        <span class="site mono">{p.site}</span>
+        <span class="handle" style={`--rank:${color(p.rank)}`}>
+          {p.handle}
+        </span>
+        {p.rank && (
+          <span class="rank" style={`--rank:${color(p.rank)}`}>
+            {title(p.rank)}
+            {p.rating && <span class="mono rating">{p.rating}</span>}
+          </span>
+        )}
+      </a>
+    ))
+  }
+</span>
+
+<style>
+  .cp {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+  }
+  .cp-item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .site {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+  .handle {
+    font-weight: 700;
+    color: var(--rank);
+  }
+  .rank {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--rank);
+  }
+  .rating {
+    margin-left: 6px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .cp-item:hover .handle {
+    text-decoration: underline;
+  }
+  :global(:root[data-theme='dark']) .handle,
+  :global(:root[data-theme='dark']) .rank {
+    filter: brightness(1.6);
+  }
+  .card .cp-item {
+    padding: 8px 12px;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--rank, var(--rule));
+    border-radius: 8px;
+    background: var(--surface);
+  }
+</style>

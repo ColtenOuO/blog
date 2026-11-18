@@ -1,0 +1,195 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import PostRows from '../components/PostRows.astro';
+import PostTiles from '../components/PostTiles.astro';
+import AwardTable from '../components/AwardTable.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import ItemList from '../components/ItemList.astro';
+import JobList from '../components/JobList.astro';
+import OpenSourceList from '../components/OpenSourceList.astro';
+import CpProfiles from '../components/CpProfiles.astro';
+import { AWARDS, HIGHLIGHTS, JOBS, PROFILE, PROGRAMS, PROJECTS, SOCIALS } from '../data';
+import { avatar } from '../utils/avatar';
+import { byCategory, getPosts } from '../utils/posts';
+
+const tutorials = (await getPosts(byCategory('tutorial'))).slice(0, 6);
+const notes = (await getPosts(byCategory('travel', 'life'))).slice(0, 4);
+const homeProjects = PROJECTS.filter((p) => p.home);
+---
+
+<BaseLayout>
+  <div class="grid">
+    <!-- 自我介紹 | 照片 -->
+    <section class="intro span-7">
+      <p class="eyebrow mono">{PROFILE.headline}</p>
+      <h1>{PROFILE.name} <span class="nick">(<span class="marker">{PROFILE.nickname}</span>)</span></h1>
+      {PROFILE.intro.map((p) => <p class="lead">{p}</p>)}
+      <dl class="facts">
+        {
+          PROFILE.facts.map((f, i) => (
+            <div>
+              <dt class={`mono c${i % 3}`}>{f.label}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))
+        }
+        {
+          PROFILE.cp.length > 0 && (
+            <div>
+              <dt class="mono c3">競程</dt>
+              <dd>
+                <CpProfiles />
+              </dd>
+            </div>
+          )
+        }
+      </dl>
+      <div class="links">
+        {SOCIALS.map((s) => <a href={s.href} target="_blank" rel="noopener">{s.label} ↗</a>)}
+        <a href="/about" class="more">完整經歷 →</a>
+      </div>
+    </section>
+    {
+      avatar && (
+        <figure class="intro-photo span-5">
+          <Image src={avatar} alt={PROFILE.name} width={900} loading="eager" />
+        </figure>
+      )
+    }
+
+    <!-- 左欄：文章與教學 | 右欄：經歷、競賽、開源 -->
+    <div class="span-7 col">
+      <section class="c-blue">
+        <SectionHead section="tutorials" href="/category/tutorial" />
+        <PostRows posts={tutorials} />
+      </section>
+      <section class="c-pink">
+        <SectionHead section="notes" href="/category/notes" />
+        <PostTiles posts={notes} columns={2} />
+      </section>
+      <section class="c-yellow">
+        <SectionHead section="teachingCommunity" href="/about#teaching" linkText="更多 →" />
+        <ItemList items={HIGHLIGHTS} compact />
+      </section>
+    </div>
+    <div class="span-5 col">
+      <section class="c-purple">
+        <SectionHead section="experience" href="/about#jobs" linkText="更多 →" />
+        <JobList jobs={JOBS} compact />
+        <JobList jobs={PROGRAMS} compact orgFirst />
+      </section>
+      <section class="c-orange">
+        <SectionHead section="awardsShort" href="/about#awards" linkText="更多 →" />
+        <AwardTable awards={AWARDS} />
+      </section>
+      <section class="c-green">
+        <SectionHead section="openSource" href="/about#open-source" linkText="更多 →" />
+        <OpenSourceList compact limit={6} />
+      </section>
+    </div>
+
+    <!-- 專案 -->
+    <section class="span-12 c-blue">
+      <SectionHead section="projects" href="/about#projects" />
+      <ProjectGrid projects={homeProjects} columns={4} />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .intro {
+    align-self: center;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+  .eyebrow {
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    margin: 0 0 18px;
+    line-height: 1.2;
+  }
+  .nick {
+    white-space: nowrap;
+  }
+  .lead {
+    font-size: 1.06rem;
+    margin: 0 0 12px;
+    max-width: 38em;
+  }
+  .facts {
+    margin: 22px 0 0;
+    border-top: 1px solid var(--rule);
+  }
+  .facts div {
+    display: grid;
+    grid-template-columns: 4em 1fr;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  dt {
+    padding-top: 0.2em;
+    font-weight: 600;
+  }
+  dt.c0 {
+    color: var(--c-orange);
+  }
+  dt.c1 {
+    color: var(--c-blue);
+  }
+  dt.c2 {
+    color: var(--c-green);
+  }
+  dt.c3 {
+    color: var(--c-purple);
+  }
+  dd {
+    margin: 0;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
+    margin-top: 20px;
+  }
+  .links a {
+    text-decoration: none;
+  }
+  .links .more {
+    color: #fff;
+    background: var(--accent);
+    padding: 2px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .links .more:hover {
+    filter: brightness(1.08);
+  }
+  .intro-photo {
+    margin: 0;
+    align-self: center;
+  }
+  .intro-photo img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  @media (max-width: 900px) {
+    .intro-photo {
+      order: -1;
+    }
+    .intro-photo img {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>

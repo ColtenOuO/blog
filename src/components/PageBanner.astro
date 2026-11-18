@@ -1,0 +1,54 @@
+---
+// 內頁頁首：左邊標題（中文 + 英文），右邊一張照片
+import Photo from './Photo.astro';
+
+interface Props {
+  title: string;
+  en?: string;
+  subtitle?: string;
+}
+const { title, en, subtitle } = Astro.props;
+---
+
+<section class="banner">
+  <div class="text">
+    <h1 class="page-title">{title}{en && <span class="en">{en}</span>}</h1>
+    {subtitle && <p class="page-subtitle">{subtitle}</p>}
+    <slot />
+  </div>
+  <Photo class="pic" />
+</section>
+
+<style>
+  .banner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: 40px;
+    align-items: end;
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .text {
+    padding-bottom: 30px;
+  }
+  .text :global(.chips) {
+    margin-top: 20px;
+  }
+  .banner :global(.pic) {
+    height: 220px;
+  }
+  @media (max-width: 760px) {
+    .banner {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .text {
+      padding-bottom: 0;
+      order: 2;
+    }
+    .banner :global(.pic) {
+      height: 160px;
+    }
+  }
+</style>

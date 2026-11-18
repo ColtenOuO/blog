@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Photo from '../components/Photo.astro';
+---
+
+<BaseLayout title="找不到頁面">
+  <div class="grid nf">
+    <div class="span-5 text">
+      <p class="mono muted">404</p>
+      <h1>這裡什麼都沒有</h1>
+      <p>可能是網址打錯，或文章搬家了。</p>
+      <a href="/">← 回首頁</a>
+    </div>
+    <Photo class="span-7 pic" />
+  </div>
+</BaseLayout>
+
+<style>
+  .nf {
+    align-items: center;
+    min-height: 50vh;
+  }
+  h1 {
+    font-size: 2.2rem;
+    margin: 0 0 8px;
+  }
+  .nf :global(.pic) {
+    height: 360px;
+  }
+</style>
