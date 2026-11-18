@@ -13,7 +13,7 @@ export const NAV = [
   { label: '教學', href: '/category/tutorial' },
   { label: '隨筆', href: '/category/notes' },
   { label: '履歷', href: '/resume' },
-  { label: '封存', href: '/archive' },
+  { label: '聯絡', href: '/contact' },
 ];
 
 // 各區塊 / 頁面標題（中文 + 英文附註），改這裡全站一起改
@@ -36,6 +36,7 @@ export const SECTIONS = {
   contents: { zh: '目錄', en: 'Contents' },
   tags: { zh: '標籤', en: 'Tags' },
   archive: { zh: '封存', en: 'Archive' },
+  contactChannels: { zh: '其他管道', en: 'Elsewhere' },
   resume: { zh: '履歷', en: 'Résumé' },
 } as const;
 

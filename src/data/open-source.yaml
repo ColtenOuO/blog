@@ -2,10 +2,12 @@
 #
 # repo        GitHub repo，例如 apache/airflow（必填；非 GitHub 專案就寫名稱）
 # merged      合併數量（必填）。GitHub repo 會在 build 時自動向 GitHub 更新，這裡的數字是備援
+# reviewed    review 過的 PR 數量（不含自己的 PR）。同樣會自動更新，這裡是備援
 # unit        數量單位，預設 merged；非 GitHub 可寫 patch
 # href        點擊要去的網址；不填則連到你在該 repo 的 merged PR 列表
 # role        角色標籤，例如 Maintainer
-# note        說明
+# about       這個專案是什麼（一句話介紹）
+# note        你做了什麼
 # logo        src/assets/logos/ 裡的檔名（不含副檔名）。不填會自動找：
 #             <repo 名稱>.png → <組織名稱>.png，例如 apache/airflow 先找 airflow，再找 apache
 # links       額外連結 [{ label, href }]
@@ -13,6 +15,8 @@
 
 - repo: apache/airflow
   merged: 55
+  reviewed: 55
+  about: Apache 基金會的工作流程排程平台，用 Python 撰寫、排程與監控資料管線（Dag）
   note: 改進 API 與資料庫查詢效能、協助新 provider 開發與新版本發布；近幾個月全球前 20 名貢獻者
   highlights:
     - title: Fix N+1 query in bulk update for Variables and Pools
@@ -26,23 +30,23 @@
 
 - repo: sysprog21/codetrial
   merged: 23
+  reviewed: 159
   role: Maintainer
-  note: 成大 jserv 老師設計的 live coding 面試練習平台（MIT 授權、100+ stars）；負責 code review 與 issue 分類，已 review 40+ PRs
-  links:
-    - label: Reviewed PRs
-      href: https://github.com/sysprog21/codetrial/pulls?q=is%3Apr+state%3Aclosed+reviewed-by%3A%40ColtenOuO
+  about: 成大 jserv 老師設計的 live coding 面試練習平台（MIT 授權、100+ stars）
+  note: 負責 code review 與 issue 分類
 
 - repo: Linux Kernel
   merged: 1
   unit: patch
   logo: linux
+  about: 開源作業系統核心
   href: https://patchew.org/linux/20260722044236.6346-1-jun930436@gmail.com/
   note: 移除文件中標示、但實際上沒有實作的 empty 操作；經維護者 ACK 後合入 Linux 原始碼
 
-- { repo: apache/kafka, merged: 1 }
-- { repo: apache/superset, merged: 1 }
-- { repo: rust-lang/rust, merged: 1 }
-- { repo: llvm/llvm-project, merged: 1 }
-- { repo: duckdb/duckdb, merged: 1 }
-- { repo: vllm-project/vllm, merged: 1 }
-- { repo: tldr-pages/tldr, merged: 1 }
+- { repo: apache/kafka, merged: 1, about: 分散式事件串流平台，用於高吞吐量的即時資料管線 }
+- { repo: apache/superset, merged: 1, about: 資料探索與視覺化的 BI 平台 }
+- { repo: rust-lang/rust, merged: 1, about: Rust 程式語言的編譯器與標準函式庫 }
+- { repo: llvm/llvm-project, merged: 1, about: 模組化的編譯器基礎設施，包含 Clang 與 LLVM 最佳化器 }
+- { repo: duckdb/duckdb, merged: 1, about: 嵌入式的分析型（OLAP）SQL 資料庫 }
+- { repo: vllm-project/vllm, merged: 1, about: 高吞吐量的大型語言模型推論與服務引擎 }
+- { repo: tldr-pages/tldr, merged: 1, about: 社群維護、簡化版的命令列工具說明頁 }

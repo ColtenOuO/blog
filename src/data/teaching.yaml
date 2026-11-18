@@ -32,23 +32,27 @@
 - title: SCIST 寒訓演算法組 講師
   period: 2023
   logo: scist
+  home: true
   detail: 教授「枚舉」與「貪心」
 
 - title: 台南女中資訊研究社 講師
   period: 2022 – 2024
   logo: tngs
+  home: true
   detail: C++ 進階班，語法與演算法；多位學生在學科能力競賽有出色表現
   url: https://github.com/ColtenOuO/TNGS-IRC-38th-Introduction-to-Competitive-Programming
 
 - title: 嘉義女中 數理資優班資訊組 授課老師
   period: 2022 – 2023
   logo: cygsh
+  home: true
   detail: 帶零基礎的學生學會 C++ 程式設計
   url: https://github.com/ColtenOuO/CYGSH-Program-Design-Course
 
 - title: 普門中學 資訊選手培訓
   period: 2022 – 2023
   logo: pumen
+  home: true
   detail: 每週從台南通車到高雄大樹指導；學生 APCS 觀念與實作皆滿級分，並分別以特殊選才進入台大與成大資工
 
 # ---- 高中 ----

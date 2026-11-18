@@ -2,6 +2,7 @@
 #
 # avatar  照片檔名，放在 src/assets/profile/ 裡
 # facts   首頁自我介紹下方的小表格（label 建議 2 個字）
+#         links 會以「 · 」串成超連結，value 接在後面當補充說明
 
 name: Jyun-An Chen
 nickname: Colten
@@ -14,11 +15,23 @@ intro:
 
 facts:
   - label: 現在
-    value: 陽明交大 資科工所 · IMS Lab（2027.02 起逕博）
+    links:
+      - label: 國立陽明交通大學
+        href: https://www.nycu.edu.tw/
+      - label: 資訊科學與工程研究所
+        href: https://www.cs.nycu.edu.tw/
+      - label: 網際網路與行動服務實驗室 IMS Lab
+        href: https://www.lab117.org/
+    value: 2027.02 起逕讀博士
   - label: 之前
-    value: 成大 資工系 2022 – 2026
+    links:
+      - label: 國立成功大學
+        href: https://www.ncku.edu.tw/
+      - label: 資訊工程學系
+        href: https://www.csie.ncku.edu.tw/
+    value: 2022 – 2026
   - label: 興趣
-    value: 競技程式、編譯器、資料庫、分散式系統
+    value: 演算法、資料結構、高速計算 (HPC)、分散式系統
 
 # 競程帳號：Codeforces 的 rank / rating 會在 build 時自動向 Codeforces 更新，這裡是備援
 cp:
@@ -35,3 +48,23 @@ socials:
     href: https://www.linkedin.com/in/jyun-an-chen-808218179/
   - label: Email
     href: mailto:jun930436@gmail.com
+
+# 聯絡頁（/contact）
+# emails  信箱，第一個是主要信箱
+# links   socials 以外、只在聯絡頁出現的連結（icon 依 label 自動對應：Instagram / Facebook）
+contact:
+  intro: 不論是開源協作、競程出題、演講邀約，或只是想聊聊技術，都歡迎來信討論。
+  reply: 如果怕信件回覆較慢，也歡迎直接從社群平台上私訊！
+  emails:
+    - label: 個人信箱
+      address: jun930436@gmail.com
+    - label: 學校信箱
+      address: coltenchen.cs15@nycu.edu.tw
+  links:
+    - label: Instagram
+      href: https://www.instagram.com/colten._.0402/
+    - label: Facebook
+      href: https://www.facebook.com/ColtenOuO/
+  location: 國立陽明交通大學 工程三館 117 實驗室
+  location_note: 網際網路與行動服務實驗室 IMS Lab · 新竹
+  location_map: https://www.google.com/maps/search/?api=1&query=國立陽明交通大學工程三館

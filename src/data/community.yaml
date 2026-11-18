@@ -9,6 +9,7 @@
 
 - title: GDG on Campus NCKU 副社長
   logo: gdg
+  home: true
   detail: 社團行政與課程規劃，主講〈競程到演算法的開發應用〉
 
 - title: 成大高中生程式設計邀請賽 出題者
@@ -18,6 +19,7 @@
 
 - title: YTP 少年圖靈計畫 出題者
   logo: systex
+  home: true
   detail: 協助賽務，並提供初賽與決賽題目，賽中上台講解自己出的題目
   url: https://www.youtube.com/watch?v=Or2-Ib6ygeY&t=14780s
 

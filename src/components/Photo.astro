@@ -9,7 +9,7 @@ interface Props {
   class?: string;
   caption?: boolean;
 }
-const { class: cls, caption = true } = Astro.props;
+const { class: cls, caption = false } = Astro.props;
 const photos = await getPhotos();
 const fallback = !photos.length && avatar ? (await getImage({ src: avatar, width: 1200, format: 'webp' })).src : undefined;
 const first = photos[0];

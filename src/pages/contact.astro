@@ -1,0 +1,375 @@
+---
+// 聯絡頁：內容來自 profile.yaml 的 socials、cp 與 contact
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageBanner from '../components/PageBanner.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { PROFILE, SOCIALS } from '../data';
+
+const contact = PROFILE.contact;
+const fallbackMail = SOCIALS.find((s) => s.href.startsWith('mailto:'))?.href.slice(7);
+const emails = contact?.emails.length ? contact.emails : fallbackMail ? [{ label: 'Email', address: fallbackMail }] : [];
+
+const strip = (href: string) => href.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+const DESC: Record<string, string> = {
+  github: '開源貢獻與個人專案',
+  linkedin: '工作、學經歷與專業背景',
+  instagram: '生活與旅行的日常',
+  facebook: '近況與動態',
+};
+const channels = [
+  ...SOCIALS.filter((s) => !s.href.startsWith('mailto:')),
+  ...(contact?.links ?? []),
+].map((s) => {
+  const key = s.label.toLowerCase();
+  const handle = key === 'instagram' ? `@${strip(s.href).split('/').pop()}` : strip(s.href);
+  return { key, label: s.label, handle, href: s.href, desc: DESC[key] ?? '' };
+});
+for (const c of PROFILE.cp) {
+  channels.push({
+    key: c.site.toLowerCase(),
+    label: c.site,
+    handle: c.handle,
+    href: c.url,
+    desc: `競程紀錄${c.rank ? ` · ${c.rank}` : ''}`,
+  });
+}
+const COLORS = ['c-blue', 'c-purple', 'c-pink', 'c-orange', 'c-green'];
+---
+
+<BaseLayout title="聯絡" description={`聯絡 ${PROFILE.name}：Email、GitHub、LinkedIn`}>
+  <PageBanner title="聯絡" en="Contact" subtitle={contact?.intro} />
+
+  <div class="grid">
+    <div class="span-7 col">
+      {
+        emails.length > 0 && (
+          <section class="mail c-orange">
+            <p class="kicker mono">Email · 最快找到我的方式</p>
+            <ul class="emails">
+              {emails.map((e, i) => (
+                <li class:list={{ main: i === 0 }}>
+                  <span class="lbl mono muted">{e.label}</span>
+                  <a class="address" href={`mailto:${e.address}`}>
+                    {e.address}
+                  </a>
+                  <div class="actions">
+                    <a class:list={['btn', { primary: i === 0 }]} href={`mailto:${e.address}`}>
+                      寫信 →
+                    </a>
+                    <button class="btn" type="button" data-copy={e.address}>
+                      <span class="idle">複製</span>
+                      <span class="done">已複製 ✓</span>
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            {contact?.reply && <p class="reply muted">{contact.reply}</p>}
+          </section>
+        )
+      }
+
+      <section class="c-blue">
+        <SectionHead section="contactChannels" />
+        <ul class="channels">
+          {
+            channels.map((c, i) => (
+              <li class={COLORS[i % COLORS.length]}>
+                <a href={c.href} target="_blank" rel="noopener">
+                  <span class="icon" aria-hidden="true">
+                    {c.key === 'github' ? (
+                      <svg viewBox="0 0 16 16" width="22" height="22" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+                      </svg>
+                    ) : c.key === 'linkedin' ? (
+                      <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
+                        <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
+                      </svg>
+                    ) : c.key === 'instagram' ? (
+                      <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="5" />
+                        <circle cx="12" cy="12" r="4.2" />
+                        <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none" />
+                      </svg>
+                    ) : c.key === 'facebook' ? (
+                      <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
+                        <path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07z" />
+                      </svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
+                        <rect x="2" y="9" width="5" height="12" rx="1.2" />
+                        <rect x="9.5" y="3" width="5" height="18" rx="1.2" />
+                        <rect x="17" y="12" width="5" height="9" rx="1.2" />
+                      </svg>
+                    )}
+                  </span>
+                  <span class="text">
+                    <strong>{c.label}</strong>
+                    <span class="handle mono">{c.handle}</span>
+                    {c.desc && <span class="desc muted">{c.desc}</span>}
+                  </span>
+                  <span class="arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </div>
+
+    <aside class="span-5 col side">
+      {
+        contact?.location && (
+          <section class="place c-purple">
+            <p class="kicker mono">實驗室 · Lab</p>
+            <p class="where">{contact.location}</p>
+            {contact.location_note && <p class="muted">{contact.location_note}</p>}
+            {contact.location_map && (
+              <a href={contact.location_map} target="_blank" rel="noopener">
+                在 Google 地圖開啟 ↗
+              </a>
+            )}
+          </section>
+        )
+      }
+
+      <p class="more">
+        想先認識我？看看 <a href="/about">經歷</a> 或 <a href="/resume">履歷 Résumé</a>
+      </p>
+    </aside>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  document.querySelectorAll('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy);
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 1800);
+      } catch {
+        location.href = 'mailto:' + btn.dataset.copy;
+      }
+    });
+  });
+</script>
+
+<style>
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+  .side {
+    gap: 28px;
+  }
+  .kicker {
+    margin: 0 0 10px;
+    font-size: 0.8rem;
+    color: var(--sec);
+  }
+
+  /* Email 卡片 */
+  .mail {
+    padding: 26px 28px 22px;
+    border: 1px solid var(--rule);
+    border-top: 4px solid var(--sec);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .emails {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .emails li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'lbl lbl'
+      'addr actions';
+    align-items: center;
+    gap: 2px 16px;
+    padding: 14px 0;
+  }
+  .emails li + li {
+    border-top: 1px dashed var(--rule);
+  }
+  .emails li:first-child {
+    padding-top: 0;
+  }
+  .emails li:last-child {
+    padding-bottom: 0;
+  }
+  .lbl {
+    grid-area: lbl;
+    font-size: 0.76rem;
+  }
+  .address {
+    grid-area: addr;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .main .address {
+    font-size: clamp(1.3rem, 3.6vw, 1.75rem);
+  }
+  .main .address {
+    background: linear-gradient(transparent 62%, var(--highlight) 62%, var(--highlight) 92%, transparent 92%);
+    justify-self: start;
+  }
+  .actions {
+    grid-area: actions;
+    display: flex;
+    gap: 8px;
+  }
+  .btn {
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: var(--bg);
+    color: var(--text);
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn:hover {
+    border-color: var(--sec);
+  }
+  .btn.primary {
+    background: var(--sec);
+    border-color: var(--sec);
+    color: #fff;
+  }
+  .btn.primary:hover {
+    filter: brightness(1.08);
+  }
+  .btn .done,
+  .btn.copied .idle {
+    display: none;
+  }
+  .btn.copied .done {
+    display: inline;
+    color: var(--c-green);
+  }
+  .reply {
+    margin: 16px 0 0;
+    font-size: 0.86rem;
+  }
+
+  /* 其他管道 */
+  .channels {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .channels a {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    height: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .channels a:hover {
+    border-color: var(--sec);
+    transform: translateY(-2px);
+  }
+  .icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    color: var(--sec);
+    background: color-mix(in srgb, var(--sec) 14%, transparent);
+  }
+  .text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .handle {
+    font-size: 0.78rem;
+    color: var(--sec);
+    overflow-wrap: anywhere;
+  }
+  .desc {
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+  .arrow {
+    color: var(--text-muted);
+  }
+  .channels a:hover .arrow {
+    color: var(--sec);
+  }
+
+  /* 右欄 */
+  .place {
+    padding: 18px 20px;
+    border-left: 4px solid var(--sec);
+    background: var(--surface);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .place p {
+    margin: 0;
+  }
+  .where {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1.4;
+  }
+  .place .muted {
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }
+  .place a {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.88rem;
+    color: var(--sec);
+    text-decoration: none;
+  }
+  .more {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 560px) {
+    .channels {
+      grid-template-columns: 1fr;
+    }
+    .mail {
+      padding: 22px 18px 18px;
+    }
+    .emails li {
+      grid-template-columns: 1fr;
+      grid-template-areas: 'lbl' 'addr' 'actions';
+      gap: 4px;
+    }
+    .actions {
+      margin-top: 8px;
+    }
+  }
+</style>

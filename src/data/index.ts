@@ -26,7 +26,9 @@ const profile = z.object({
   headline: z.string(),
   avatar: z.string(),
   intro: z.array(z.string()),
-  facts: z.array(z.object({ label: z.string(), value: z.string() })),
+  facts: z.array(
+    z.object({ label: z.string(), value: z.string().optional(), links: z.array(link).optional() }),
+  ),
   socials: z.array(link),
   cp: z
     .array(
@@ -39,6 +41,17 @@ const profile = z.object({
       }),
     )
     .default([]),
+  contact: z
+    .object({
+      intro: z.string(),
+      reply: z.string().optional(),
+      emails: z.array(z.object({ label: z.string(), address: z.string() })).default([]),
+      links: z.array(link).default([]),
+      location: z.string().optional(),
+      location_note: z.string().optional(),
+      location_map: z.string().optional(),
+    })
+    .optional(),
 });
 
 const education = z.object({
@@ -75,7 +88,9 @@ const award = z.object({
 const openSource = z.object({
   repo: z.string(),
   merged: z.coerce.number(),
+  reviewed: z.coerce.number().default(0),
   unit: z.string().optional(),
+  about: z.string().optional(),
   href: z.string().optional(),
   role: z.string().optional(),
   note: z.string().optional(),

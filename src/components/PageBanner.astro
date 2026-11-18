@@ -35,8 +35,9 @@ const { title, en, subtitle } = Astro.props;
   .text :global(.chips) {
     margin-top: 20px;
   }
+  /* 固定 16:9，照片不會被裁成細長條 */
   .banner :global(.pic) {
-    height: 220px;
+    aspect-ratio: 16 / 9;
   }
   @media (max-width: 760px) {
     .banner {
@@ -46,9 +47,6 @@ const { title, en, subtitle } = Astro.props;
     .text {
       padding-bottom: 0;
       order: 2;
-    }
-    .banner :global(.pic) {
-      height: 160px;
     }
   }
 </style>
