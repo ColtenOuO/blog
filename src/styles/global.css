@@ -173,11 +173,13 @@ main {
 .span-8 { grid-column: span 8; }
 .span-12 { grid-column: span 12; }
 @media (max-width: 900px) {
+  /* 手機 / 平板：改成單欄，否則 12 欄的 11 個間距會撐出比螢幕還寬的版面 */
   .grid {
+    grid-template-columns: minmax(0, 1fr);
     row-gap: 44px;
   }
   .grid > * {
-    grid-column: span 12;
+    grid-column: 1 / -1;
   }
 }
 
