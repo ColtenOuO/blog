@@ -63,7 +63,7 @@ const education = z.object({
   degree_en: z.string().optional(),
   period: z.string(),
   logo: z.string().optional(),
-  lab: z.object({ name: z.string(), url: z.string().optional() }).optional(),
+  lab: z.object({ name: z.string(), url: z.string().optional(), logo: z.string().optional() }).optional(),
   note: z.string().optional(),
 });
 

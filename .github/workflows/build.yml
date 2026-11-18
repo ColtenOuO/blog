@@ -1,0 +1,20 @@
+# PR / push 到 main 時跑一次 build，確認網站能正常產生
+# Cloudflare Pages 的部署結果會另外以「Cloudflare Pages」檢查顯示在 PR 上
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build

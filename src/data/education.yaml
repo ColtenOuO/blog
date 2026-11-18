@@ -6,7 +6,7 @@
 # degree_en  系所與學位英文
 # period     期間（必填）
 # logo       src/assets/logos/ 裡的檔名，不含副檔名
-# lab        實驗室 { name, url }
+# lab        實驗室 { name, url, logo }，logo 是研究頁用的實驗室 logo（沒有就用學校 logo）
 # note       補充說明
 
 - school: 國立陽明交通大學 (目前就讀中)
@@ -18,6 +18,7 @@
   lab:
     name: 網際網路與行動服務實驗室 IMS Lab
     url: https://www.lab117.org/
+    logo: imslab
   note: 碩士班逕讀博士 · Direct Ph.D. Program
 
 - school: 國立陽明交通大學
@@ -29,6 +30,7 @@
   lab:
     name: 網際網路與行動服務實驗室 IMS Lab
     url: https://www.lab117.org/
+    logo: imslab
 
 - school: 國立成功大學
   school_en: National Cheng Kung University
@@ -36,6 +38,8 @@
   degree_en: B.S. in Computer Science and Information Engineering
   period: 2022.09 – 2026.06
   logo: ncku
+  lab:
+    name: 高速計算及智慧視覺系統實驗室 SIVS Lab
   note: 特殊選才甲組
 
 - school: 國立新化高級中學
