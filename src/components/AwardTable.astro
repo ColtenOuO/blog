@@ -20,15 +20,6 @@ const { awards } = Astro.props;
           )}
         </div>
         <span class:list={['result', a.medal]}>
-          {
-            a.medal && (
-              <svg class="medal" viewBox="0 0 16 22" width="13" height="18" aria-hidden="true">
-                <path class="ribbon" d="M3 0h4l2 6H5zM9 0h4l-2 6H7z" />
-                <circle class="disc" cx="8" cy="14" r="6.5" />
-                <circle class="ring" cx="8" cy="14" r="4" />
-              </svg>
-            )
-          }
           {a.result}
         </span>
       </li>
@@ -67,29 +58,10 @@ const { awards } = Astro.props;
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
     font-size: 0.88rem;
     font-weight: 600;
     white-space: nowrap;
     text-align: right;
-  }
-  .medal .ribbon {
-    fill: var(--c-blue);
-    opacity: 0.75;
-  }
-  .medal .ring {
-    fill: none;
-    stroke: rgba(255, 255, 255, 0.55);
-    stroke-width: 1;
-  }
-  .gold .disc {
-    fill: #e8b30b;
-  }
-  .silver .disc {
-    fill: #a3adb8;
-  }
-  .bronze .disc {
-    fill: #c9773a;
   }
   .gold {
     color: #b58700;

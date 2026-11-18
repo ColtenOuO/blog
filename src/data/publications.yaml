@@ -1,0 +1,33 @@
+# 研究頁（/research）
+#
+# interests  研究方向（左欄）
+# journals / conferences  期刊 / 會議論文，各自由新到舊排；每篇欄位如下：
+#
+# title    論文標題（必填）
+# authors  作者（必填），自己的名字會自動加粗，例如 "Jyun-An Chen, Xxx Wang"
+# venue    期刊 / 會議名稱（必填），例如 "IEEE Transactions on ..."、"ICPP 2026"
+# year     年份
+# note     補充，例如 Best Paper Award、Accepted、Under Review
+# links    相關連結 [{ label, href }]，例如 PDF、DOI、Code、Slides
+#
+# 範例：
+# journals:
+#   - title: A Paper Title
+#     authors: Jyun-An Chen, Coauthor Name
+#     venue: IEEE Transactions on Parallel and Distributed Systems
+#     year: 2027
+#     links:
+#       - label: PDF
+#         href: https://example.com/paper.pdf
+#       - label: DOI
+#         href: https://doi.org/xxx
+
+interests:
+  - 演算法
+  - 資料結構
+  - 網路
+  - 高速計算 (HPC)
+
+journals: []
+
+conferences: []

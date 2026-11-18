@@ -4,6 +4,8 @@ import PageBanner from '../../components/PageBanner.astro';
 import PostRows from '../../components/PostRows.astro';
 import PostTiles from '../../components/PostTiles.astro';
 import SectionHead from '../../components/SectionHead.astro';
+import CourseList from '../../components/CourseList.astro';
+import { COURSES } from '../../data';
 import { CATEGORIES, type Category } from '../../config';
 import { byCategory, getPosts } from '../../utils/posts';
 
@@ -26,7 +28,12 @@ const tags = [...tagCounts].sort((a, b) => b[1] - a[1]);
 ---
 
 <BaseLayout title={meta.label} description={meta.description}>
-  <PageBanner title={meta.label} en={meta.en} subtitle={`${meta.description} · ${posts.length} 篇`}>
+  <PageBanner
+    title={meta.label}
+    en={meta.en}
+    subtitle={`${meta.description} · ${posts.length} 篇`}
+    photo={category === 'tutorial' ? 'ICPC-台中區域賽' : undefined}
+  >
     {
       isNotes && (
         <nav class="chips">
@@ -45,6 +52,12 @@ const tags = [...tagCounts].sort((a, b) => b[1] - a[1]);
       <div class="grid">
         <div class="span-8">
           <PostRows posts={posts} />
+          {COURSES.length > 0 && (
+            <section id="courses" class="courses c-green">
+              <SectionHead section="courses" />
+              <CourseList courses={COURSES} />
+            </section>
+          )}
         </div>
         <aside class="span-4">
           <SectionHead section="tags" href="/tags/" />
@@ -62,6 +75,9 @@ const tags = [...tagCounts].sort((a, b) => b[1] - a[1]);
 </BaseLayout>
 
 <style>
+  .courses {
+    margin-top: 56px;
+  }
   .tag-cloud {
     display: flex;
     flex-wrap: wrap;

@@ -1,0 +1,42 @@
+# 開放式課程（經歷頁「開放式課程」）
+#
+# title    課程 / 系列名稱（必填）
+# period   年份
+# role     身分標籤，顯示在標題旁，例如「講師」
+# detail   一句話說明
+# videos   影片列表 { title, youtube }，youtube 填影片 ID（youtu.be/ 後面那串）
+
+- title: 三校聯合暑期培訓營
+  role: 講師
+  detail: 擔任課程講師，主講枚舉、搜尋、動態規劃與資料結構等單元，課程錄影公開於 YouTube
+  videos:
+    - title: 枚舉 I
+      youtube: EmFDedE0-HU
+    - title: 枚舉 II
+      youtube: cykJJi0IuVA
+    - title: 搜尋
+      youtube: JLKwJX-L2LM
+    - title: 動態規劃 I
+      youtube: ZCag1Ed4ssE
+    - title: 資料結構 II
+      youtube: KHKR7t-VT28
+    - title: 資料結構 III
+      youtube: f8cnNPOElKE
+
+- title: 第 38 屆台南女中資訊研究社 C++ 進階班
+  role: 講師
+  detail: 受邀擔任社課講師，從遞迴枚舉帶到前綴和與 STL，課程錄影公開於 YouTube
+  videos:
+    - title: 遞迴枚舉與建表
+      youtube: 5A110kjBWi8
+    - title: 前綴和與差分
+      youtube: OgecdELVqek
+    - title: STL 資料結構
+      youtube: GdtGuNM5fLg
+
+- title: APCS 題解
+  role: 主講
+  detail: 歷屆 APCS 實作題解題講解，從思路到實作完整拆解
+  videos:
+    - title: 2022.10 實作第四題「蓋步道」
+      youtube: X_OpTd3SHvs

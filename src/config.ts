@@ -10,6 +10,7 @@ export const SITE = {
 export const NAV = [
   { label: '首頁', href: '/' },
   { label: '經歷', href: '/about' },
+  { label: '研究', href: '/research' },
   { label: '教學', href: '/category/tutorial' },
   { label: '隨筆', href: '/category/notes' },
   { label: '履歷', href: '/resume' },
@@ -32,6 +33,9 @@ export const SECTIONS = {
   teaching: { zh: '教學', en: 'Teaching' },
   community: { zh: '社群', en: 'Community' },
   teachingCommunity: { zh: '教學與社群', en: 'Teaching & Community' },
+  courses: { zh: '開放式課程', en: 'Open Courses' },
+  journals: { zh: '期刊論文', en: 'Journal Papers' },
+  conferences: { zh: '會議論文', en: 'Conference Papers' },
   education: { zh: '學歷', en: 'Education' },
   contents: { zh: '目錄', en: 'Contents' },
   tags: { zh: '標籤', en: 'Tags' },

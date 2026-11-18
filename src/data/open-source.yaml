@@ -46,7 +46,7 @@
 - { repo: apache/kafka, merged: 1, about: 分散式事件串流平台，用於高吞吐量的即時資料管線 }
 - { repo: apache/superset, merged: 1, about: 資料探索與視覺化的 BI 平台 }
 - { repo: rust-lang/rust, merged: 1, about: Rust 程式語言的編譯器與標準函式庫 }
-- { repo: llvm/llvm-project, merged: 1, about: 模組化的編譯器基礎設施，包含 Clang 與 LLVM 最佳化器 }
+- { repo: llvm/llvm-project, merged: 1, about: 模組化的編譯器基礎設施 }
 - { repo: duckdb/duckdb, merged: 1, about: 嵌入式的分析型（OLAP）SQL 資料庫 }
 - { repo: vllm-project/vllm, merged: 1, about: 高吞吐量的大型語言模型推論與服務引擎 }
 - { repo: tldr-pages/tldr, merged: 1, about: 社群維護、簡化版的命令列工具說明頁 }

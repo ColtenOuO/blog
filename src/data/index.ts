@@ -12,6 +12,8 @@ import openSourceRaw from './open-source.yaml?raw';
 import projectsRaw from './projects.yaml?raw';
 import teachingRaw from './teaching.yaml?raw';
 import communityRaw from './community.yaml?raw';
+import coursesRaw from './courses.yaml?raw';
+import publicationsRaw from './publications.yaml?raw';
 
 // ---------- schema ----------
 const icon = z.enum(['trophy', 'code', 'people', 'school', 'book', 'star']);
@@ -126,6 +128,23 @@ const item = z.object({
   home: bool,
 });
 
+const course = z.object({
+  title: z.string(),
+  period: z.string().optional(),
+  role: z.string().optional(),
+  detail: z.string().optional(),
+  videos: z.array(z.object({ title: z.string(), youtube: z.string() })),
+});
+
+const publication = z.object({
+  title: z.string(),
+  authors: z.string(),
+  venue: z.string(),
+  year: z.string().optional(),
+  note: z.string().optional(),
+  links: z.array(z.object({ label: z.string(), href: z.string() })).default([]),
+});
+
 // ---------- 讀檔 ----------
 // failsafe：所有值先當字串讀進來，避免 2023.10 被當成數字 2023.1
 function load<T extends z.ZodTypeAny>(file: string, raw: string, schema: T): z.infer<T> {
@@ -153,6 +172,19 @@ export const OPEN_SOURCE = load('open-source.yaml', openSourceRaw, z.array(openS
 export const PROJECTS = load('projects.yaml', projectsRaw, z.array(project));
 export const TEACHING = load('teaching.yaml', teachingRaw, z.array(item));
 export const COMMUNITY = load('community.yaml', communityRaw, z.array(item));
+export const COURSES = load('courses.yaml', coursesRaw, z.array(course));
+const publications = load(
+  'publications.yaml',
+  publicationsRaw,
+  z.object({
+    interests: z.array(z.string()).default([]),
+    journals: z.array(publication).default([]),
+    conferences: z.array(publication).default([]),
+  }),
+);
+export const RESEARCH_INTERESTS = publications.interests;
+export const JOURNALS = publications.journals;
+export const CONFERENCES = publications.conferences;
 
 // 首頁「教學與社群」：teaching / community 裡標了 home: true 的項目
 export const HIGHLIGHTS = [...TEACHING, ...COMMUNITY].filter((i) => i.home);
@@ -163,3 +195,5 @@ export type Award = z.infer<typeof award>;
 export type OpenSource = z.infer<typeof openSource>;
 export type Project = z.output<typeof project>;
 export type Item = z.infer<typeof item>;
+export type Course = z.infer<typeof course>;
+export type Publication = z.infer<typeof publication>;

@@ -6,8 +6,9 @@ interface Props {
   title: string;
   en?: string;
   subtitle?: string;
+  photo?: string; // 指定 src/assets/photos/ 裡的照片（檔名的一部分），不給就隨機
 }
-const { title, en, subtitle } = Astro.props;
+const { title, en, subtitle, photo } = Astro.props;
 ---
 
 <section class="banner">
@@ -16,7 +17,7 @@ const { title, en, subtitle } = Astro.props;
     {subtitle && <p class="page-subtitle">{subtitle}</p>}
     <slot />
   </div>
-  <Photo class="pic" />
+  <Photo class="pic" pick={photo} />
 </section>
 
 <style>

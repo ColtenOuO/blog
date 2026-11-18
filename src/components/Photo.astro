@@ -1,5 +1,6 @@
 ---
 // 隨機顯示一張旅行照片（src/assets/photos/）；同一個瀏覽分頁內固定同一張
+// 傳 pick（檔名的一部分）就固定顯示那一張，不隨機
 // 還沒放旅行照片時，改用個人照片（src/assets/profile/）
 import { getImage } from 'astro:assets';
 import { getPhotos } from '../utils/photos';
@@ -8,16 +9,19 @@ import { avatar } from '../utils/avatar';
 interface Props {
   class?: string;
   caption?: boolean;
+  pick?: string;
 }
-const { class: cls, caption = false } = Astro.props;
-const photos = await getPhotos();
+const { class: cls, caption = false, pick } = Astro.props;
+const all = await getPhotos();
+const picked = pick ? all.find((p) => p.file.includes(pick)) : undefined;
+const photos = picked ? [picked] : all;
 const fallback = !photos.length && avatar ? (await getImage({ src: avatar, width: 1200, format: 'webp' })).src : undefined;
 const first = photos[0];
 ---
 
 {
   first ? (
-    <figure class:list={['photo', cls]} data-photos={JSON.stringify(photos)}>
+    <figure class:list={['photo', cls]} data-photos={picked ? undefined : JSON.stringify(photos)}>
       <img src={first.src} alt={first.caption} />
       {caption && <figcaption class="mono">{first.caption}</figcaption>}
     </figure>

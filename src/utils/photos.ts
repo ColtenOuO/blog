@@ -9,6 +9,7 @@ const files = import.meta.glob<{ default: ImageMetadata }>('/src/assets/photos/*
 export interface Photo {
   src: string;
   caption: string;
+  file: string;
 }
 
 let cache: Promise<Photo[]> | undefined;
@@ -21,7 +22,7 @@ export function getPhotos(): Promise<Photo[]> {
         const img = await getImage({ src: mod.default, width: 2000, format: 'webp', quality: 80 });
         const name = path.split('/').pop()!.replace(/\.[^.]+$/, '');
         const caption = name.replace(/_/g, ' · ').replace(/-/g, ' ');
-        return { src: img.src, caption };
+        return { src: img.src, caption, file: name };
       }),
   );
   return cache;

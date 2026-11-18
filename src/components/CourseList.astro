@@ -1,0 +1,145 @@
+---
+// 開放式課程：每個系列一組 YouTube 影片縮圖，點了開 YouTube
+import type { Course } from '../data';
+
+interface Props {
+  courses: Course[];
+}
+const { courses } = Astro.props;
+---
+
+<div class="courses">
+  {
+    courses.map((c) => (
+      <div class="course">
+        <div class="top">
+          <strong class="title">
+            {c.title}
+            {c.role && <span class="role">{c.role}</span>}
+          </strong>
+          {c.period && <span class="mono muted">{c.period}</span>}
+        </div>
+        {c.detail && <p class="detail">{c.detail}</p>}
+        <ul class="videos">
+          {c.videos.map((v) => (
+            <li>
+              <a href={`https://youtu.be/${v.youtube}`} target="_blank" rel="noopener">
+                <span class="thumb">
+                  <img
+                    src={`https://i.ytimg.com/vi/${v.youtube}/mqdefault.jpg`}
+                    alt=""
+                    loading="lazy"
+                    width="320"
+                    height="180"
+                  />
+                  <span class="play" aria-hidden="true">▶</span>
+                </span>
+                <span class="name">{v.title}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .courses {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .title {
+    font-weight: 600;
+  }
+  .role {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--c-green);
+    color: var(--c-green);
+    font-size: 0.75rem;
+    font-weight: 600;
+    vertical-align: 2px;
+  }
+  .detail {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin: 2px 0 0;
+  }
+  .videos {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .videos a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  .thumb {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    background: var(--code-bg);
+  }
+  .thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s;
+  }
+  .play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 0.95rem;
+    padding-left: 3px;
+    opacity: 0.85;
+    transition: opacity 0.2s, background 0.2s;
+  }
+  .videos a:hover img {
+    transform: scale(1.04);
+  }
+  .videos a:hover .play {
+    opacity: 1;
+    background: var(--c-orange);
+  }
+  .name {
+    display: block;
+    margin-top: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .videos a:hover .name {
+    color: var(--accent);
+  }
+  @media (max-width: 700px) {
+    .videos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+  }
+</style>
