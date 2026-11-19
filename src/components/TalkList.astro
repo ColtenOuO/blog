@@ -1,0 +1,166 @@
+---
+// 演講與報導：有 YouTube 的顯示影片縮圖，文章類顯示文字卡
+import type { Talk } from '../data';
+
+interface Props {
+  talks: Talk[];
+}
+const { talks } = Astro.props;
+---
+
+<ul class="talks">
+  {
+    talks.map((t) => {
+      const href = t.youtube ? `https://youtu.be/${t.youtube}` : t.url;
+      return (
+        <li>
+          <a href={href} target="_blank" rel="noopener">
+            <span class:list={['thumb', { text: !t.youtube }]}>
+              {t.youtube ? (
+                <>
+                  <img
+                    src={`https://i.ytimg.com/vi/${t.youtube}/mqdefault.jpg`}
+                    alt=""
+                    loading="lazy"
+                    width="320"
+                    height="180"
+                  />
+                  <span class="play" aria-hidden="true">▶</span>
+                </>
+              ) : (
+                <span class="label mono" aria-hidden="true">{t.kind ?? 'Article'}</span>
+              )}
+            </span>
+            <span class="body">
+              <span class="meta">
+                {t.kind && <span class="kind">{t.kind}</span>}
+                {t.period && <span class="mono muted">{t.period}</span>}
+              </span>
+              <strong class="title">{t.title} ↗</strong>
+              {t.venue && <span class="venue">{t.venue}</span>}
+              {t.detail && <span class="detail">{t.detail}</span>}
+            </span>
+          </a>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .talks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .talks li {
+    border-bottom: 1px solid var(--rule);
+  }
+  .talks a {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    padding: 14px 0;
+    text-decoration: none;
+    color: inherit;
+  }
+  .thumb {
+    position: relative;
+    flex: 0 0 200px;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    background: var(--code-bg);
+  }
+  .thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s;
+  }
+  .thumb.text {
+    display: grid;
+    place-items: center;
+    border-left: 4px solid var(--sec);
+  }
+  .label {
+    color: var(--sec);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+  }
+  .play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 0.9rem;
+    padding-left: 3px;
+    opacity: 0.85;
+    transition: opacity 0.2s, background 0.2s;
+  }
+  .talks a:hover img {
+    transform: scale(1.04);
+  }
+  .talks a:hover .play {
+    opacity: 1;
+    background: var(--c-orange);
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .meta {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    font-size: 0.85rem;
+  }
+  .kind {
+    padding: 1px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--sec);
+    color: var(--sec);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .title {
+    font-weight: 600;
+    line-height: 1.45;
+  }
+  .talks a:hover .title {
+    color: var(--accent);
+  }
+  .venue {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+  .detail {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  @media (max-width: 640px) {
+    .talks a {
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .thumb {
+      flex-basis: 128px;
+    }
+    .label {
+      font-size: 0.85rem;
+    }
+  }
+</style>

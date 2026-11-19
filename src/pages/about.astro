@@ -8,17 +8,21 @@ import ItemList from '../components/ItemList.astro';
 import JobList from '../components/JobList.astro';
 import OrgLogo from '../components/OrgLogo.astro';
 import OpenSourceList from '../components/OpenSourceList.astro';
+import CourseList from '../components/CourseList.astro';
+import TalkList from '../components/TalkList.astro';
 import { SECTIONS } from '../config';
 import {
   AWARDS,
   AWARDS_HIGH_SCHOOL,
   COMMUNITY,
+  COURSES,
   EDUCATION,
   JOBS,
   PROFILE,
   PROGRAMS,
   PROJECTS,
   SOCIALS,
+  TALKS,
   TEACHING,
 } from '../data';
 import { avatar } from '../utils/avatar';
@@ -30,10 +34,12 @@ const toc = [
   { id: 'open-source', s: SECTIONS.openSource },
   { id: 'projects', s: SECTIONS.projects },
   { id: 'teaching', s: SECTIONS.teachingCommunity },
+  COURSES.length && { id: 'courses', s: SECTIONS.courses },
+  TALKS.length && { id: 'talks', s: SECTIONS.talks },
 ].filter(Boolean) as { id: string; s: { zh: string; en: string } }[];
 ---
 
-<BaseLayout title="經歷" description={`${PROFILE.name}：學歷、工作、競賽、開源與教學經歷`}>
+<BaseLayout title="經歷" description={`${PROFILE.name}：學歷、工作、競賽、開源、教學與演講經歷`}>
   <div class="grid">
     <!-- 左：個人資料（獨立捲動） -->
     <aside class="span-4 side">
@@ -134,6 +140,23 @@ const toc = [
           <ItemList items={COMMUNITY} />
         </section>
       </div>
+
+      {
+        COURSES.length > 0 && (
+          <section id="courses" class="c-green">
+            <SectionHead section="courses" />
+            <CourseList courses={COURSES} />
+          </section>
+        )
+      }
+      {
+        TALKS.length > 0 && (
+          <section id="talks" class="c-purple">
+            <SectionHead section="talks" />
+            <TalkList talks={TALKS} />
+          </section>
+        )
+      }
     </div>
   </div>
 </BaseLayout>

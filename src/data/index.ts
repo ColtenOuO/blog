@@ -14,6 +14,7 @@ import teachingRaw from './teaching.yaml?raw';
 import communityRaw from './community.yaml?raw';
 import coursesRaw from './courses.yaml?raw';
 import publicationsRaw from './publications.yaml?raw';
+import talksRaw from './talks.yaml?raw';
 
 // ---------- schema ----------
 const icon = z.enum(['trophy', 'code', 'people', 'school', 'book', 'star']);
@@ -136,6 +137,18 @@ const course = z.object({
   videos: z.array(z.object({ title: z.string(), youtube: z.string() })),
 });
 
+const talk = z
+  .object({
+    title: z.string(),
+    kind: z.string().optional(),
+    venue: z.string().optional(),
+    period: z.string().optional(),
+    detail: z.string().optional(),
+    youtube: z.string().optional(),
+    url: z.string().optional(),
+  })
+  .refine((t) => t.youtube || t.url, { message: 'youtube 或 url 至少要填一個' });
+
 const publication = z.object({
   title: z.string(),
   authors: z.string(),
@@ -173,6 +186,7 @@ export const PROJECTS = load('projects.yaml', projectsRaw, z.array(project));
 export const TEACHING = load('teaching.yaml', teachingRaw, z.array(item));
 export const COMMUNITY = load('community.yaml', communityRaw, z.array(item));
 export const COURSES = load('courses.yaml', coursesRaw, z.array(course));
+export const TALKS = load('talks.yaml', talksRaw, z.array(talk));
 const publications = load(
   'publications.yaml',
   publicationsRaw,
@@ -198,4 +212,5 @@ export type OpenSource = z.infer<typeof openSource>;
 export type Project = z.output<typeof project>;
 export type Item = z.infer<typeof item>;
 export type Course = z.infer<typeof course>;
+export type Talk = z.infer<typeof talk>;
 export type Publication = z.infer<typeof publication>;

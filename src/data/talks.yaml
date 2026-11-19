@@ -1,0 +1,26 @@
+# 演講與報導（經歷頁「演講與報導」）
+#
+# title    標題（必填）
+# kind     類型標籤，例如「演講」「講座」「訪談」
+# venue    場合 / 媒體
+# period   日期
+# detail   一句話說明
+# youtube  YouTube 影片 ID（youtu.be/ 後面那串），有填就顯示影片縮圖
+# url      沒有影片時的連結（文章等）
+
+- title: 從競程到開發：演算法的應用與思維轉變
+  kind: 演講
+  venue: SITCON 2025 學生計算機年會
+  period: 2025
+  youtube: aji5vU1Lzwc
+
+- title: Colten 大佬開課啦！｜Recursion 遞迴
+  kind: 講座
+  venue: 好像是成大資工讀書會
+  youtube: SPrIs06-RV4
+
+- title: "[訪談] APCS x 競程選手 Colten"
+  kind: 訪談
+  venue: iT 邦幫忙
+  period: 2021.10
+  url: https://ithelp.ithome.com.tw/articles/10279422

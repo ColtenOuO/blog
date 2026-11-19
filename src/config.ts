@@ -34,6 +34,7 @@ export const SECTIONS = {
   community: { zh: '社群', en: 'Community' },
   teachingCommunity: { zh: '教學與社群', en: 'Teaching & Community' },
   courses: { zh: '開放式課程', en: 'Open Courses' },
+  talks: { zh: '演講與報導', en: 'Talks & Press' },
   journals: { zh: '期刊論文', en: 'Journal Papers' },
   conferences: { zh: '會議論文', en: 'Conference Papers' },
   education: { zh: '學歷', en: 'Education' },
