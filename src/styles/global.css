@@ -1,21 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --bg: #fffaf2;
+  --bg: #f5faf3;
   --surface: #ffffff;
-  --text: #22202e;
-  --text-muted: #6c6879;
-  --rule: #efe6d8;
-  --rule-strong: #22202e;
-  --c-orange: #ff6a3d;
-  --c-blue: #3b7bff;
-  --c-green: #12b886;
-  --c-pink: #f0508c;
-  --c-purple: #8b5cf6;
-  --c-yellow: #ffc93c;
-  --accent: var(--c-orange);
-  --highlight: #ffe58a;
-  --code-bg: #f6efe4;
+  --text: #1c2a23;
+  --text-muted: #5c6d64;
+  --rule: #dceadc;
+  --rule-strong: #1c2a23;
+  --c-orange: #ff7a59;
+  --c-blue: #1e9bd7;
+  --c-green: #22a35a;
+  --c-pink: #ec5f8c;
+  --c-purple: #7b6cf0;
+  --c-yellow: #f5b82e;
+  --accent: var(--c-green);
+  --highlight: #d4f4a6;
+  --code-bg: #ecf4ea;
   --radius: 10px;
   --maxw: 1160px;
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Noto Sans TC',
@@ -26,20 +26,20 @@
 }
 
 :root[data-theme='dark'] {
-  --bg: #17151f;
-  --surface: #211e2c;
-  --text: #eeecf5;
-  --text-muted: #a5a0b6;
-  --rule: #322e40;
-  --rule-strong: #eeecf5;
-  --c-orange: #ff8a5c;
-  --c-blue: #6f9dff;
-  --c-green: #3fd6a4;
-  --c-pink: #ff74a6;
-  --c-purple: #a98bff;
-  --c-yellow: #ffd866;
-  --highlight: #5a4a12;
-  --code-bg: #24212f;
+  --bg: #111915;
+  --surface: #19241e;
+  --text: #e7f1ea;
+  --text-muted: #9cb0a4;
+  --rule: #283830;
+  --rule-strong: #e7f1ea;
+  --c-orange: #ff9677;
+  --c-blue: #5bbcf0;
+  --c-green: #4fd487;
+  --c-pink: #ff82a8;
+  --c-purple: #a497ff;
+  --c-yellow: #ffd257;
+  --highlight: #3a5a1c;
+  --code-bg: #1a2620;
   color-scheme: dark;
 }
 
