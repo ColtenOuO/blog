@@ -194,13 +194,15 @@ const publications = load(
     me: z.array(z.string()).default([]),
     interests: z.array(z.string()).default([]),
     journals: z.array(publication).default([]),
-    conferences: z.array(publication).default([]),
+    international_conferences: z.array(publication).default([]),
+    domestic_conferences: z.array(publication).default([]),
   }),
 );
 export const RESEARCH_ME = publications.me;
 export const RESEARCH_INTERESTS = publications.interests;
 export const JOURNALS = publications.journals;
-export const CONFERENCES = publications.conferences;
+export const INTL_CONFERENCES = publications.international_conferences;
+export const DOMESTIC_CONFERENCES = publications.domestic_conferences;
 
 // 首頁「教學與社群」：teaching / community 裡標了 home: true 的項目
 export const HIGHLIGHTS = [...TEACHING, ...COMMUNITY].filter((i) => i.home);

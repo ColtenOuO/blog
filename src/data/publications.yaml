@@ -2,7 +2,10 @@
 #
 # me         自己在論文上的名字（各種寫法），作者列表裡會加粗並加上 *
 # interests  研究方向（左欄）
-# journals / conferences  期刊 / 會議論文，各自由新到舊排；每篇欄位如下：
+# journals                 期刊論文
+# international_conferences 國際會議論文
+# domestic_conferences      國內會議論文
+# 以上各自由新到舊排；每篇欄位如下：
 #
 # title    論文標題（必填）
 # authors  作者（必填），用「, 」或「、」分隔，例如 "Jyun-An Chen, Xxx Wang" 或 "陳俊安、王小明"
@@ -35,7 +38,9 @@ interests:
 
 journals: []
 
-conferences:
+international_conferences: []
+
+domestic_conferences:
   - title: 基於智慧城市的相似度演算法優劣分析
     authors: 陳俊安、黃翊銘、楊孟憲、姚谷伝、洪志菁
     venue: 第二十一屆離島資訊與應用研討會 Conference on Information Technology and Application in Outlying Islands (ITAOI 2023)

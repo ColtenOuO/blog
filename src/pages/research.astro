@@ -1,15 +1,24 @@
 ---
-// 研究頁：左欄研究方向與實驗室，右欄期刊 / 會議論文
+// 研究頁：左欄研究方向與實驗室，右欄期刊 / 國際會議 / 國內會議論文
 // 內容來自 src/data/publications.yaml；實驗室取 education.yaml 裡有填 lab 的學歷
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHead from '../components/SectionHead.astro';
 import OrgLogo from '../components/OrgLogo.astro';
-import { CONFERENCES, EDUCATION, JOURNALS, PROFILE, RESEARCH_INTERESTS, RESEARCH_ME, type Publication } from '../data';
+import { DOMESTIC_CONFERENCES, EDUCATION, INTL_CONFERENCES, JOURNALS, PROFILE, RESEARCH_INTERESTS, RESEARCH_ME, type Publication } from '../data';
 
-const groups: { key: 'journals' | 'conferences'; items: Publication[]; color: string }[] = [
-  { key: 'journals', items: JOURNALS, color: 'c-blue' },
-  { key: 'conferences', items: CONFERENCES, color: 'c-purple' },
+// prefix：編號前綴，J = 期刊、C = 國際會議、D = 國內會議
+const groups: {
+  key: 'journals' | 'intlConferences' | 'domesticConferences';
+  items: Publication[];
+  color: string;
+  prefix: string;
+  label: string;
+}[] = [
+  { key: 'journals', items: JOURNALS, color: 'c-blue', prefix: 'J', label: '期刊' },
+  { key: 'intlConferences', items: INTL_CONFERENCES, color: 'c-purple', prefix: 'C', label: '國際會議' },
+  { key: 'domesticConferences', items: DOMESTIC_CONFERENCES, color: 'c-green', prefix: 'D', label: '國內會議' },
 ];
+const total = groups.reduce((n, g) => n + g.items.length, 0);
 // 每個實驗室列一次（碩士班、博士班同一間只算一次），由新到舊
 // 期間合併：最早那筆的開始 – 最新那筆的結束，例如碩士 2026.09 + 博士 2027.02 – → 2026.09 –
 const withLab = EDUCATION.filter((e) => e.lab);
@@ -75,18 +84,16 @@ const authorParts = (authors: string) =>
         )
       }
       {
-        JOURNALS.length + CONFERENCES.length > 0 && (
+        total > 0 && (
           <section class="c-blue">
             <h2 class="small-head">發表統計<span class="en">Summary</span></h2>
             <dl class="stats">
-              <div>
-                <dt class="mono">{JOURNALS.length}</dt>
-                <dd>期刊</dd>
-              </div>
-              <div>
-                <dt class="mono">{CONFERENCES.length}</dt>
-                <dd>會議</dd>
-              </div>
+              {groups.map((g) => (
+                <div>
+                  <dt class="mono">{g.items.length}</dt>
+                  <dd>{g.label}</dd>
+                </div>
+              ))}
             </dl>
           </section>
         )
@@ -102,7 +109,7 @@ const authorParts = (authors: string) =>
               <ol class="list">
                 {g.items.map((p, i) => (
                   <li>
-                    <span class="idx mono">[{g.key === 'journals' ? 'J' : 'C'}{g.items.length - i}]</span>
+                    <span class="idx mono">[{g.prefix}{g.items.length - i}]</span>
                     <div class="body">
                       <div class="title">{p.title}</div>
                       <div class="authors">
