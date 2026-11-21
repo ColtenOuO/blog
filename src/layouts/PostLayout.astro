@@ -44,7 +44,7 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
     {cover && <Image src={cover} alt="" width={1400} class="post-cover" loading="eager" />}
 
-    <div class="layout">
+    <div class={`layout${toc.length >= 2 ? '' : ' no-toc'}`}>
       <div class="prose">
         <slot />
       </div>
@@ -113,7 +113,6 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
 <style>
   .post-head {
-    max-width: 760px;
     padding-bottom: 24px;
     margin-bottom: 32px;
     border-bottom: 1px solid var(--rule);
@@ -155,9 +154,12 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
   }
   .layout {
     display: grid;
-    grid-template-columns: minmax(0, 720px) 220px;
-    gap: 72px;
-    justify-content: start;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 56px;
+  }
+  /* 沒有目錄時，內文直接吃滿整個版面寬度 */
+  .layout.no-toc {
+    grid-template-columns: minmax(0, 1fr);
   }
   .toc {
     position: sticky;
@@ -196,7 +198,6 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
-    max-width: 720px;
     margin-top: 64px;
     padding-top: 20px;
     border-top: 2px solid var(--rule-strong);
