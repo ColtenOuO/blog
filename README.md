@@ -34,7 +34,7 @@ npm run build    # 輸出到 dist/
 
 ## 寫文章
 
-在 `src/content/posts/` 下新增 `.md`（或 `.mdx`），寫法參考 `src/content/posts/tutorials/hello-astro.md`。
+在 `src/content/posts/` 下新增 `.md`（或 `.mdx`），寫法參考 `src/content/posts/tutorials/p-vs-np.md`。
 
 - `category: tutorial` → 教學
 - `category: travel` → 旅遊
