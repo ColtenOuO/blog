@@ -7,6 +7,8 @@ const posts = defineCollection({
     z.object({
       title: z.string(),
       description: z.string().optional(),
+      // 作者，沒寫就用預設的名字
+      author: z.string().default('Jyun-An Chen (Colten)'),
       date: z.coerce.date(),
       updated: z.coerce.date().optional(),
       category: z.enum(['tutorial', 'travel', 'life']),

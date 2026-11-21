@@ -14,7 +14,7 @@ interface Props {
 }
 
 const { post, headings, prev, next } = Astro.props;
-const { title, description, date, updated, category, tags, cover } = post.data;
+const { title, description, author, date, updated, category, tags, cover } = post.data;
 const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 ---
 
@@ -23,6 +23,7 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
     <header class="post-head">
       <p class="meta mono">
         <a href={`/category/${category}`} class="cat" style={`color:${CATEGORIES[category].color}`}>{CATEGORIES[category].label}</a>
+        <span>{author}</span>
         <span>{formatDate(date)}</span>
         {updated && <span>更新於 {formatDate(updated)}</span>}
         <span>約 {readingTime(post.body)} 分鐘</span>

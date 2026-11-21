@@ -1,6 +1,7 @@
 ---
 title: 繼黎曼猜想之後，AI 能解開資工界的世紀難題 P 與 NP 問題嗎？
 description: 從圖靈機、SAT 到 NP 完全與 NP 困難，用白話認識七大千禧年問題中最貼近資工系的 P 與 NP 問題。
+author: Jyun-An Chen (Colten)
 date: 2026-11-22
 category: tutorial
 tags: [演算法 Algorithm, 計算理論 Theory of Computation]
