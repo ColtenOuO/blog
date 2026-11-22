@@ -24,6 +24,7 @@ const { posts, columns = 3, empty = '還沒有文章。' } = Astro.props;
           )}
           <span class="meta mono muted">
             <b style={`color:${CATEGORIES[p.data.category].color}`}>{CATEGORIES[p.data.category].label}</b> · {formatDate(p.data.date)}
+            <span class="views" data-views={p.id} />
           </span>
           <span class="title">{p.data.title}</span>
           {p.data.description && <span class="desc">{p.data.description}</span>}
@@ -62,6 +63,9 @@ const { posts, columns = 3, empty = '還沒有文章。' } = Astro.props;
   }
   .tile:hover .cover {
     opacity: 0.85;
+  }
+  .views:not(:empty)::before {
+    content: ' · ';
   }
   .title {
     font-family: var(--font-serif);

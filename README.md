@@ -54,3 +54,20 @@ npm run build    # 輸出到 dist/
 5. 記得把 `src/config.ts` 的 `url` 改成你的網域
 
 之後每次 push 到 `main` 就會自動部署，開 PR 也會有預覽網址。
+
+## 文章觀看次數
+
+觀看次數由 [worker/index.ts](worker/index.ts) 提供 API，資料存在 Cloudflare D1：
+
+- `POST /api/views/<slug>`：+1（前端同一個瀏覽器每篇每天只會送一次）
+- `GET /api/views?slugs=a,b,c`：一次查多篇的總數
+
+第一次設定（wrangler 需要 Node.js 22 以上）：
+
+```bash
+npx wrangler d1 create blog-views                          # 把印出的 database_id 填進 wrangler.jsonc
+npx wrangler d1 migrations apply blog-views --remote       # 建立資料表
+```
+
+本地測試：`npm run build && npx wrangler d1 migrations apply blog-views --local && npx wrangler dev`。
+`npm run dev`（astro dev）沒有 API，觀看次數不會顯示，這是正常的。

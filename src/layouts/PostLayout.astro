@@ -27,6 +27,7 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
         <span>{formatDate(date)}</span>
         {updated && <span>更新於 {formatDate(updated)}</span>}
         <span>約 {readingTime(post.body)} 分鐘</span>
+        <span class="views" data-views={post.id} data-views-track={post.id}></span>
       </p>
       <h1>{title}</h1>
       {description && <p class="desc">{description}</p>}
@@ -128,6 +129,9 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
   .cat {
     color: var(--accent);
     text-decoration: none;
+  }
+  .views:empty {
+    display: none;
   }
   h1 {
     font-size: clamp(1.8rem, 4.2vw, 2.6rem);

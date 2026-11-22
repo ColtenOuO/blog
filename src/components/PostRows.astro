@@ -20,9 +20,10 @@ const fmt = (d: Date) =>
     <ol class:list={['rows', { compact }]}>
       {sorted.map((p) => (
         <li>
-          <time class="mono muted" datetime={p.data.date.toISOString()}>
-            {fmt(p.data.date)}
-          </time>
+          <div class="side mono muted">
+            <time datetime={p.data.date.toISOString()}>{fmt(p.data.date)}</time>
+            <span class="views" data-views={p.id}></span>
+          </div>
           <div class="main">
             <a href={postUrl(p)} class="title">
               {p.data.pinned && <span class="pin mono">置頂</span>}
@@ -68,9 +69,17 @@ const fmt = (d: Date) =>
   .compact li {
     padding: 10px 0;
   }
-  time {
+  .side {
+    display: flex;
+    flex-direction: column;
     padding-top: 0.25em;
     white-space: nowrap;
+  }
+  .views {
+    font-size: 0.8em;
+  }
+  .views:empty {
+    display: none;
   }
   .title {
     font-family: var(--font-serif);
@@ -106,6 +115,13 @@ const fmt = (d: Date) =>
     li {
       grid-template-columns: 1fr;
       gap: 2px;
+    }
+    .side {
+      flex-direction: row;
+      gap: 12px;
+    }
+    .views {
+      font-size: inherit;
     }
   }
 </style>
