@@ -5,9 +5,11 @@ import PostRows from '../../components/PostRows.astro';
 import PostTiles from '../../components/PostTiles.astro';
 import SectionHead from '../../components/SectionHead.astro';
 import CourseList from '../../components/CourseList.astro';
+import CourseRows from '../../components/CourseRows.astro';
 import { COURSES } from '../../data';
 import { CATEGORIES, type Category } from '../../config';
 import { byCategory, getPosts } from '../../utils/posts';
+import { getCourseSummaries } from '../../utils/courses';
 
 // tutorial / travel / life 各一頁，另外 notes = 旅遊 + 雜記
 export function getStaticPaths() {
@@ -25,6 +27,9 @@ const posts = await getPosts(category === 'notes' ? byCategory('travel', 'life')
 const tagCounts = new Map<string, number>();
 posts.forEach((p) => p.data.tags.forEach((t) => tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1)));
 const tags = [...tagCounts].sort((a, b) => b[1] - a[1]);
+
+// 教學頁：開放式課程（站內課程 + YouTube 影片）
+const courses = isNotes ? [] : await getCourseSummaries();
 ---
 
 <BaseLayout title={meta.label} description={meta.description}>
@@ -52,10 +57,15 @@ const tags = [...tagCounts].sort((a, b) => b[1] - a[1]);
       <div class="grid">
         <div class="span-8">
           <PostRows posts={posts} />
-          {COURSES.length > 0 && (
+          {(courses.length > 0 || COURSES.length > 0) && (
             <section id="courses" class="courses c-green">
-              <SectionHead section="courses" />
-              <CourseList courses={COURSES} />
+              <SectionHead section="courses" href={courses.length ? '/courses/' : undefined} linkText="所有課程 →" />
+              {courses.length > 0 && <CourseRows courses={courses} />}
+              {COURSES.length > 0 && (
+                <div class:list={{ videos: courses.length > 0 }}>
+                  <CourseList courses={COURSES} />
+                </div>
+              )}
             </section>
           )}
         </div>
@@ -77,6 +87,9 @@ const tags = [...tagCounts].sort((a, b) => b[1] - a[1]);
 <style>
   .courses {
     margin-top: 56px;
+  }
+  .videos {
+    margin-top: 36px;
   }
   .tag-cloud {
     display: flex;

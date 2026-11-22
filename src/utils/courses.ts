@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { readingTime } from './posts';
 
 export type Course = CollectionEntry<'courses'>;
 export type Lesson = CollectionEntry<'lessons'>;
@@ -38,3 +39,27 @@ export function groupLessons(course: Course, lessons: Lesson[]): { part?: string
 export const courseUrl = (id: string) => `/courses/${id}/`;
 export const lessonUrl = (l: Lesson) => `/courses/${l.id}/`;
 export const unitLabel = (n: number) => `Unit ${String(n).padStart(2, '0')}`;
+
+export interface CourseSummary {
+  course: Course;
+  lessons: Lesson[];
+  minutes: number;
+  /** 所有單元中最新的 updated / date */
+  updated?: Date;
+}
+
+/** 課程列表用：每門課的單元數、總閱讀時間、最後更新日期 */
+export async function getCourseSummaries(): Promise<CourseSummary[]> {
+  return Promise.all(
+    (await getCourses()).map(async (course) => {
+      const lessons = await getLessons(course.id);
+      const dates = lessons.map((l) => l.data.updated ?? l.data.date).filter((d): d is Date => !!d);
+      return {
+        course,
+        lessons,
+        minutes: lessons.reduce((sum, l) => sum + readingTime(l.body), 0),
+        updated: dates.length ? new Date(Math.max(...dates.map((d) => d.valueOf()))) : undefined,
+      };
+    }),
+  );
+}

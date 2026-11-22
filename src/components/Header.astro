@@ -4,7 +4,12 @@ import ThemeToggle from './ThemeToggle.astro';
 
 const path = Astro.url.pathname;
 const isActive = (href: string) =>
-  href === '/' ? path === '/' : path.startsWith(href) || (href === '/category/notes' && /\/category\/(travel|life)/.test(path));
+  href === '/'
+    ? path === '/'
+    : path.startsWith(href) ||
+      (href === '/category/notes' && /\/category\/(travel|life)/.test(path)) ||
+      // 開放式課程放在教學底下
+      (href === '/category/tutorial' && path.startsWith('/courses'));
 ---
 
 <header class="site-header">

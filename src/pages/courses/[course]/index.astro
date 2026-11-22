@@ -20,7 +20,7 @@ const groups = groupLessons(course, lessons);
 const minutes = lessons.reduce((sum, l) => sum + readingTime(l.body), 0);
 ---
 
-<BaseLayout title={`${title} | 開放式課程`} description={description}>
+<BaseLayout title={`${title} | 開放式課程`} description={description} wide>
   <CourseHeader slot="header" course={course} />
 
   <section class="hero">

@@ -8,9 +8,11 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  /** 加寬版面（課程頁用） */
+  wide?: boolean;
 }
 
-const { title, description = SITE.description, image } = Astro.props;
+const { title, description = SITE.description, image, wide = false } = Astro.props;
 const fullTitle = title ? `${title} | ${SITE.title}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = image ? new URL(image, Astro.site).toString() : undefined;
@@ -48,7 +50,7 @@ const ogImage = image ? new URL(image, Astro.site).toString() : undefined;
   <body>
     <slot name="header"><Header /></slot>
     <main>
-      <div class="container">
+      <div class:list={['container', { wide }]}>
         <slot />
       </div>
     </main>

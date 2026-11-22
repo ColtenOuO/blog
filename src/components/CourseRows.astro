@@ -1,0 +1,171 @@
+---
+// 開放式課程列表（橫式卡片）：左邊單元數色塊，中間課名與簡介，下方更新日期等資訊
+import { formatDate } from '../utils/posts';
+import { courseUrl, type CourseSummary } from '../utils/courses';
+
+interface Props {
+  courses: CourseSummary[];
+  empty?: string;
+}
+const { courses, empty = '課程準備中。' } = Astro.props;
+---
+
+{
+  courses.length ? (
+    <ul class="course-rows">
+      {courses.map(({ course, lessons, minutes, updated }) => (
+        <li>
+          <a href={courseUrl(course.id)} class="row">
+            <span class="badge">
+              <span class="n">{lessons.length}</span>
+              <span class="u mono">單元</span>
+            </span>
+            <span class="body">
+              <span class="en-name mono">{course.data.en}</span>
+              <span class="title">{course.data.title}</span>
+              <span class="desc">{course.data.description}</span>
+              {course.data.parts.length > 0 && (
+                <span class="parts">
+                  {course.data.parts.map((p, i) => (
+                    <span class="part mono">
+                      <b>{String(i + 1).padStart(2, '0')}</b> {p}
+                    </span>
+                  ))}
+                </span>
+              )}
+              <span class="meta mono">
+                {updated && <span>更新於 {formatDate(updated)}</span>}
+                <span>約 {minutes} 分鐘</span>
+                <span class="go">進入課程 →</span>
+              </span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="muted">{empty}</p>
+  )
+}
+
+<style>
+  .course-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .row {
+    display: flex;
+    gap: 22px;
+    padding: 18px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .row:hover {
+    color: inherit;
+    border-color: var(--accent);
+    box-shadow: 0 10px 28px -18px rgba(0, 0, 0, 0.4);
+  }
+  .badge {
+    flex: none;
+    width: 96px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 9px, rgba(255, 255, 255, 0.12) 9px 10px),
+      var(--accent);
+    color: var(--bg);
+  }
+  .n {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+  .u {
+    margin-top: 6px;
+    opacity: 0.9;
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+  }
+  .en-name {
+    color: var(--text-muted);
+  }
+  .title {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.3rem;
+    line-height: 1.4;
+  }
+  .row:hover .title {
+    color: var(--accent);
+  }
+  .desc {
+    color: var(--text-muted);
+    font-size: 0.94rem;
+    margin-top: 4px;
+  }
+  .parts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .part {
+    padding: 1px 8px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    color: var(--text-muted);
+  }
+  .part b {
+    color: var(--accent);
+    font-weight: 500;
+    margin-right: 6px;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--rule);
+    color: var(--text-muted);
+  }
+  .go {
+    margin-left: auto;
+    color: var(--accent);
+  }
+  @media (max-width: 520px) {
+    .row {
+      flex-direction: column;
+      gap: 14px;
+    }
+    .badge {
+      width: auto;
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: flex-start;
+      gap: 8px;
+      padding: 10px 14px;
+    }
+    .n {
+      font-size: 1.6rem;
+    }
+    .u {
+      margin-top: 0;
+    }
+  }
+</style>

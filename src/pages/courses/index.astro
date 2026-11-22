@@ -2,11 +2,10 @@
 // 開放式課程總覽
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageBanner from '../../components/PageBanner.astro';
-import { courseUrl, getCourses, getLessons } from '../../utils/courses';
+import CourseRows from '../../components/CourseRows.astro';
+import { getCourseSummaries } from '../../utils/courses';
 
-const courses = await Promise.all(
-  (await getCourses()).map(async (c) => ({ course: c, count: (await getLessons(c.id)).length })),
-);
+const courses = await getCourseSummaries();
 ---
 
 <BaseLayout title="開放式課程" description="系列教材，一個單元一頁，從頭讀到尾或挑主題看都可以">
@@ -16,80 +15,13 @@ const courses = await Promise.all(
     subtitle={`系列教材，一個單元一頁 · ${courses.length} 門課`}
     photo="ICPC-台中區域賽"
   />
-
-  {
-    courses.length ? (
-      <ul class="catalog">
-        {courses.map(({ course, count }) => (
-          <li>
-            <a href={courseUrl(course.id)} class="card">
-              <span class="en-name mono">{course.data.en}</span>
-              <span class="title">{course.data.title}</span>
-              <span class="desc">{course.data.description}</span>
-              <span class="foot mono">
-                {count} 個單元 <span class="go">進入課程 →</span>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <p class="muted">課程準備中。</p>
-    )
-  }
+  <div class="list">
+    <CourseRows courses={courses} />
+  </div>
 </BaseLayout>
 
 <style>
-  .catalog {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
-  }
-  .card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 22px 24px 18px;
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-top: 4px solid var(--accent);
-    border-radius: var(--radius);
-    text-decoration: none;
-    transition: transform 0.15s, box-shadow 0.15s;
-  }
-  .card:hover {
-    color: inherit;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px -14px rgba(0, 0, 0, 0.35);
-  }
-  .en-name {
-    color: var(--text-muted);
-  }
-  .title {
-    font-family: var(--font-serif);
-    font-weight: 700;
-    font-size: 1.35rem;
-    line-height: 1.35;
-    margin-top: 2px;
-  }
-  .desc {
-    color: var(--text-muted);
-    font-size: 0.94rem;
-    margin-top: 8px;
-    flex: 1;
-  }
-  .foot {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 18px;
-    padding-top: 12px;
-    border-top: 1px solid var(--rule);
-    color: var(--text-muted);
-  }
-  .go {
-    color: var(--accent);
+  .list {
+    max-width: 880px;
   }
 </style>

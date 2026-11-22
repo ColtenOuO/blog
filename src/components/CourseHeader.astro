@@ -1,5 +1,5 @@
 ---
-// 課程專屬頁首：左上「Colten's Blog 開放式課程 — 英文課名」，右邊回單元列表 / 回部落格
+// 課程專屬頁首：左上「Colten's Blog 開放式課程 — 中文課名 英文課名」，右邊回單元列表 / 回部落格
 import { SITE } from '../config';
 import { courseUrl, type Course } from '../utils/courses';
 import ThemeToggle from './ThemeToggle.astro';
@@ -11,16 +11,19 @@ const { course } = Astro.props;
 ---
 
 <header class="course-header">
-  <div class="container inner">
+  <div class="container wide inner">
     <div class="brand">
       <a href="/" class="site">{SITE.title}</a>
       <a href="/courses/" class="label-oc">開放式課程</a>
       <span class="sep" aria-hidden="true">—</span>
-      <a href={courseUrl(course.id)} class="course">{course.data.en}</a>
+      <a href={courseUrl(course.id)} class="course">
+        <span class="zh">{course.data.title}</span>
+        <span class="en-name">{course.data.en}</span>
+      </a>
     </div>
     <nav>
       <a href={courseUrl(course.id)} class="nav-link">所有單元</a>
-      <a href="/courses/" class="nav-link">其他課程</a>
+      <a href="/category/tutorial#courses" class="nav-link">其他課程</a>
       <a href="/" class="nav-link">回部落格</a>
       <ThemeToggle />
     </nav>
@@ -71,12 +74,24 @@ const { course } = Astro.props;
     color: var(--text-muted);
   }
   .course {
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0 10px;
+  }
+  .zh {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+  .en-name {
     font-family: var(--font-mono);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     letter-spacing: 0.02em;
     color: var(--text-muted);
   }
-  .course:hover,
+  .course:hover .zh,
+  .course:hover .en-name,
   .site:hover {
     color: var(--accent);
   }
@@ -104,7 +119,8 @@ const { course } = Astro.props;
       padding-bottom: 8px;
     }
     .site,
-    .label-oc {
+    .label-oc,
+    .zh {
       font-size: 1.02rem;
     }
     nav {
