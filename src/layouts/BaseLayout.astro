@@ -46,7 +46,7 @@ const ogImage = image ? new URL(image, Astro.site).toString() : undefined;
     <slot name="head" />
   </head>
   <body>
-    <Header />
+    <slot name="header"><Header /></slot>
     <main>
       <div class="container">
         <slot />

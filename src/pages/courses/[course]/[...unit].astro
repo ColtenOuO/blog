@@ -1,0 +1,361 @@
+---
+// 課程單元頁：左邊單元列表（目前單元底下展開目錄），右邊內文，格式跟一般文章一樣
+import 'katex/dist/katex.min.css';
+import { render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CourseHeader from '../../../components/CourseHeader.astro';
+import { formatDate, readingTime } from '../../../utils/posts';
+import {
+  courseUrl,
+  getCourses,
+  getLessons,
+  groupLessons,
+  lessonSlug,
+  lessonUrl,
+  unitLabel,
+  type Course,
+  type Lesson,
+} from '../../../utils/courses';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const course of await getCourses()) {
+    const lessons = await getLessons(course.id);
+    for (const [i, lesson] of lessons.entries()) {
+      paths.push({
+        params: { course: course.id, unit: lessonSlug(lesson) },
+        props: { course, lesson, lessons, prev: lessons[i - 1], next: lessons[i + 1] },
+      });
+    }
+  }
+  return paths;
+}
+
+interface Props {
+  course: Course;
+  lesson: Lesson;
+  lessons: Lesson[];
+  prev?: Lesson;
+  next?: Lesson;
+}
+const { course, lesson, lessons, prev, next } = Astro.props;
+const { title, description, unit, part, author, date, updated } = lesson.data;
+const { Content, headings } = await render(lesson);
+const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+const groups = groupLessons(course, lessons);
+const viewsKey = `courses/${lesson.id}`;
+---
+
+<BaseLayout title={`${unitLabel(unit)} ${title} | ${course.data.title}`} description={description}>
+  <CourseHeader slot="header" course={course} />
+
+  <div class="layout">
+    <aside class="side">
+      <details class="units" open>
+        <summary class="mono">
+          <span>單元列表</span>
+          <span class="count">{lessons.findIndex((l) => l.id === lesson.id) + 1} / {lessons.length}</span>
+        </summary>
+        <a href={courseUrl(course.id)} class="course-name">{course.data.title}</a>
+        {
+          groups.map((g) => (
+            <div class="group">
+              {g.part && <div class="part mono">{g.part}</div>}
+              <ol>
+                {g.lessons.map((l) => (
+                  <li class:list={{ current: l.id === lesson.id }}>
+                    <a href={lessonUrl(l)} aria-current={l.id === lesson.id ? 'page' : undefined}>
+                      <span class="no mono">{String(l.data.unit).padStart(2, '0')}</span>
+                      <span>{l.data.title}</span>
+                    </a>
+                    {l.id === lesson.id && toc.length > 0 && (
+                      <ul class="toc">
+                        {toc.map((h) => (
+                          <li class={`d${h.depth}`}>
+                            <a href={`#${h.slug}`}>{h.text}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))
+        }
+      </details>
+    </aside>
+
+    <article class="lesson">
+      <header class="lesson-head">
+        <p class="kicker mono">
+          <span class="u">{unitLabel(unit)}</span>
+          {part && <span>{part}</span>}
+        </p>
+        <h1>{title}</h1>
+        {description && <p class="desc">{description}</p>}
+        <p class="meta mono">
+          <span>{author}</span>
+          {date && <span>{formatDate(date)}</span>}
+          {updated && <span>更新於 {formatDate(updated)}</span>}
+          <span>約 {readingTime(lesson.body)} 分鐘</span>
+          <span class="views" data-views={viewsKey} data-views-track={viewsKey}></span>
+        </p>
+      </header>
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      <nav class="pager">
+        {
+          prev ? (
+            <a href={lessonUrl(prev)}>
+              <span class="mono muted">← {unitLabel(prev.data.unit)}</span>
+              <span class="t">{prev.data.title}</span>
+            </a>
+          ) : (
+            <a href={courseUrl(course.id)}>
+              <span class="mono muted">← 課程首頁</span>
+              <span class="t">{course.data.title}</span>
+            </a>
+          )
+        }
+        {
+          next ? (
+            <a href={lessonUrl(next)} class="next">
+              <span class="mono muted">{unitLabel(next.data.unit)} →</span>
+              <span class="t">{next.data.title}</span>
+            </a>
+          ) : (
+            <a href={courseUrl(course.id)} class="next">
+              <span class="mono muted">完成課程 🎉</span>
+              <span class="t">回到單元列表</span>
+            </a>
+          )
+        }
+      </nav>
+    </article>
+  </div>
+</BaseLayout>
+
+<script>
+  // 手機版預設收合單元列表
+  const units = document.querySelector<HTMLDetailsElement>('.units');
+  if (units && matchMedia('(max-width: 960px)').matches) units.open = false;
+
+  // 目錄高亮目前閱讀到的段落
+  const links = new Map<string, HTMLAnchorElement>();
+  document.querySelectorAll<HTMLAnchorElement>('.toc a').forEach((a) => {
+    links.set(decodeURIComponent(a.hash.slice(1)), a);
+  });
+  if (links.size) {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          links.forEach((a) => a.classList.remove('active'));
+          links.get(e.target.id)?.classList.add('active');
+        }
+      },
+      { rootMargin: '-80px 0px -70% 0px' },
+    );
+    links.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+  }
+</script>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 56px;
+  }
+
+  /* ---------- 左側單元列表 ---------- */
+  .side {
+    position: sticky;
+    top: 96px;
+    align-self: start;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    font-size: 0.9rem;
+  }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+    cursor: pointer;
+    list-style: none;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--rule-strong);
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  .course-name {
+    display: block;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin: 12px 0 4px;
+    text-decoration: none;
+  }
+  .group {
+    margin-top: 12px;
+  }
+  .part {
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+  .side ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .side ol > li > a {
+    display: flex;
+    gap: 10px;
+    padding: 6px 10px;
+    margin: 0 -10px;
+    border-radius: 6px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .side ol > li > a:hover {
+    color: var(--text);
+    background: var(--code-bg);
+  }
+  .side .no {
+    color: var(--text-muted);
+    padding-top: 0.15em;
+  }
+  .side li.current > a {
+    color: var(--text);
+    font-weight: 600;
+    background: var(--code-bg);
+  }
+  .side li.current .no {
+    color: var(--accent);
+  }
+  .toc {
+    list-style: none;
+    margin: 4px 0 8px 14px;
+    padding: 0 0 0 14px;
+    border-left: 1px solid var(--rule);
+    font-size: 0.86rem;
+  }
+  .toc li {
+    margin: 4px 0;
+    line-height: 1.5;
+  }
+  .toc li.d3 {
+    padding-left: 12px;
+  }
+  .toc a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .toc a:hover,
+  .toc a:global(.active) {
+    color: var(--accent);
+  }
+
+  /* ---------- 內文 ---------- */
+  .lesson {
+    max-width: 820px;
+  }
+  .lesson-head {
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .kicker {
+    display: flex;
+    gap: 14px;
+    color: var(--text-muted);
+    margin: 0 0 10px;
+  }
+  .kicker .u {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  h1 {
+    font-size: clamp(1.8rem, 4.2vw, 2.5rem);
+    margin: 0;
+    line-height: 1.25;
+  }
+  .desc {
+    color: var(--text-muted);
+    font-size: 1.08rem;
+    margin: 12px 0 0;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    color: var(--text-muted);
+    margin: 14px 0 0;
+  }
+  .views:empty {
+    display: none;
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 2px solid var(--rule-strong);
+  }
+  .pager a {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+  }
+  .pager .t {
+    font-family: var(--font-serif);
+    font-weight: 600;
+  }
+  .pager .next {
+    text-align: right;
+    grid-column: 2;
+  }
+
+  @media (max-width: 960px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+    .side {
+      position: static;
+      max-height: none;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+    }
+    summary {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    .units[open] summary {
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--rule-strong);
+    }
+    .toc {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    .pager {
+      grid-template-columns: 1fr;
+    }
+    .pager .next {
+      grid-column: 1;
+    }
+  }
+</style>

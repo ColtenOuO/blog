@@ -1,0 +1,8 @@
+# 範例課程：示範課程頁的版面，正式內容可以直接改寫或整個資料夾刪掉
+title: 競技程式入門
+en: Introduction to Competitive Programming
+description: 從評測系統、時間複雜度開始，一路練到前綴和、二分搜尋等最常用的基礎技巧，適合剛開始刷題的同學。
+parts:
+  - 基礎觀念
+  - 基礎技巧
+order: 1

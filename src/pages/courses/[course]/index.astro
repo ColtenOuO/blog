@@ -1,0 +1,201 @@
+---
+// 課程首頁：課程介紹 + 選擇單元
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CourseHeader from '../../../components/CourseHeader.astro';
+import { readingTime } from '../../../utils/posts';
+import { getCourses, getLessons, groupLessons, lessonUrl, unitLabel, type Course } from '../../../utils/courses';
+
+export async function getStaticPaths() {
+  const courses = await getCourses();
+  return courses.map((course) => ({ params: { course: course.id }, props: { course } }));
+}
+
+interface Props {
+  course: Course;
+}
+const { course } = Astro.props;
+const { title, en, description } = course.data;
+const lessons = await getLessons(course.id);
+const groups = groupLessons(course, lessons);
+const minutes = lessons.reduce((sum, l) => sum + readingTime(l.body), 0);
+---
+
+<BaseLayout title={`${title} | 開放式課程`} description={description}>
+  <CourseHeader slot="header" course={course} />
+
+  <section class="hero">
+    <p class="kicker mono">開放式課程 · Open Course</p>
+    <h1>{title}</h1>
+    <p class="en-title mono">{en}</p>
+    <p class="desc">{description}</p>
+    <div class="stats mono">
+      <span><b>{lessons.length}</b> 個單元</span>
+      <span>約 <b>{minutes}</b> 分鐘</span>
+    </div>
+    {
+      lessons[0] && (
+        <a class="start" href={lessonUrl(lessons[0])}>
+          從 {unitLabel(lessons[0].data.unit)} 開始 →
+        </a>
+      )
+    }
+  </section>
+
+  {
+    groups.map((g, i) => (
+      <section class="part">
+        {g.part && (
+          <h2 class="part-title">
+            <span class="part-no mono">Part {i + 1 - (groups[0].part ? 0 : 1)}</span>
+            {g.part}
+          </h2>
+        )}
+        <ol class="units">
+          {g.lessons.map((l) => (
+            <li>
+              <a href={lessonUrl(l)} class="unit">
+                <span class="no mono">{String(l.data.unit).padStart(2, '0')}</span>
+                <span class="body">
+                  <span class="t">{l.data.title}</span>
+                  {l.data.description && <span class="d">{l.data.description}</span>}
+                  <span class="m mono">
+                    約 {readingTime(l.body)} 分鐘
+                    <span class="views" data-views={`courses/${l.id}`} />
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))
+  }
+  {lessons.length === 0 && <p class="muted">單元準備中。</p>}
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: 28px 0 40px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .kicker {
+    color: var(--accent);
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 0;
+    line-height: 1.2;
+  }
+  .en-title {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin: 6px 0 0;
+  }
+  .desc {
+    font-size: 1.08rem;
+    margin: 18px 0 0;
+    max-width: 760px;
+  }
+  .stats {
+    display: flex;
+    gap: 20px;
+    color: var(--text-muted);
+    margin-top: 16px;
+  }
+  .stats b {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .start {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+  .start:hover {
+    color: var(--bg);
+    opacity: 0.88;
+  }
+  .part + .part {
+    margin-top: 48px;
+  }
+  .part-title {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 1.3rem;
+    margin: 0 0 18px;
+    padding-top: 10px;
+    border-top: 4px solid var(--rule-strong);
+  }
+  .part-no {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .units {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .unit {
+    display: flex;
+    gap: 16px;
+    height: 100%;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .unit:hover {
+    color: inherit;
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .no {
+    font-size: 1.6rem;
+    line-height: 1.1;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .t {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 1.08rem;
+    line-height: 1.45;
+  }
+  .unit:hover .t {
+    color: var(--accent);
+  }
+  .d {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-top: 4px;
+    flex: 1;
+  }
+  .m {
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+  .views:not(:empty)::before {
+    content: ' · ';
+  }
+</style>

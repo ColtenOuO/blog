@@ -1,5 +1,6 @@
 // Cloudflare Worker：只處理 /api/*，其餘請求一律交給靜態資源（dist/）
 //
+//   slug：一般文章是 post.id，課程單元是 courses/<lesson.id>
 //   GET  /api/views?slugs=a,b,c   → { "a": 12, "b": 0, "c": 3 }
 //   POST /api/views/<slug>        → { "slug": "<slug>", "count": 13 }（+1 後的數字）
 
@@ -8,7 +9,7 @@ interface Env {
   ASSETS: Fetcher;
 }
 
-// post.id 只會是小寫英數、- _ 與 / 組成
+// post.id / lesson.id 只會是小寫英數、- _ 與 / 組成
 const SLUG_RE = /^[a-z0-9][a-z0-9/_-]{0,199}$/i;
 const MAX_BATCH = 100;
 
@@ -37,8 +38,10 @@ async function getViews(url: URL, env: Env): Promise<Response> {
 async function addView(slug: string, request: Request, env: Env): Promise<Response> {
   if (!SLUG_RE.test(slug)) return json({ error: 'bad slug' }, 400);
 
-  // 只替真的存在的文章計數，避免有人亂打 API 塞垃圾資料
-  const page = await env.ASSETS.fetch(new URL(`/posts/${slug}/`, request.url));
+  // 只替真的存在的頁面計數，避免有人亂打 API 塞垃圾資料
+  // 課程單元的 slug 是 courses/<課程>/<單元>，其他是一般文章 /posts/<slug>/
+  const path = slug.startsWith('courses/') ? `/${slug}/` : `/posts/${slug}/`;
+  const page = await env.ASSETS.fetch(new URL(path, request.url));
   if (page.status !== 200) return json({ error: 'not found' }, 404);
 
   const row = await env.DB.prepare(

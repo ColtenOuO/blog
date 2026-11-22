@@ -12,6 +12,7 @@ export const NAV = [
   { label: '經歷', href: '/about' },
   { label: '研究', href: '/research' },
   { label: '教學', href: '/category/tutorial' },
+  { label: '課程', href: '/courses' },
   { label: '隨筆', href: '/category/notes' },
   { label: '履歷', href: '/resume' },
   { label: '聯絡', href: '/contact' },

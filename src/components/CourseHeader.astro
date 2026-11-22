@@ -1,0 +1,114 @@
+---
+// 課程專屬頁首：左上「Colten's Blog 開放式課程 — 英文課名」，右邊回單元列表 / 回部落格
+import { SITE } from '../config';
+import { courseUrl, type Course } from '../utils/courses';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  course: Course;
+}
+const { course } = Astro.props;
+---
+
+<header class="course-header">
+  <div class="container inner">
+    <div class="brand">
+      <a href="/" class="site">{SITE.title}</a>
+      <a href="/courses/" class="label-oc">開放式課程</a>
+      <span class="sep" aria-hidden="true">—</span>
+      <a href={courseUrl(course.id)} class="course">{course.data.en}</a>
+    </div>
+    <nav>
+      <a href={courseUrl(course.id)} class="nav-link">所有單元</a>
+      <a href="/courses/" class="nav-link">其他課程</a>
+      <a href="/" class="nav-link">回部落格</a>
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>
+
+<style>
+  .course-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--surface);
+    border-bottom: 1px solid var(--rule);
+    border-top: 4px solid var(--accent);
+  }
+  .inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    min-height: 58px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0 10px;
+    min-width: 0;
+  }
+  .brand a {
+    text-decoration: none;
+  }
+  .site {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.15rem;
+    white-space: nowrap;
+  }
+  .label-oc {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .sep {
+    color: var(--text-muted);
+  }
+  .course {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    color: var(--text-muted);
+  }
+  .course:hover,
+  .site:hover {
+    color: var(--accent);
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 2px 20px;
+    flex-wrap: wrap;
+  }
+  .nav-link {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    text-decoration: none;
+  }
+  .nav-link:hover {
+    color: var(--text);
+  }
+  @media (max-width: 560px) {
+    /* 手機上課名會折行，頁首太高就不要固定在上方 */
+    .course-header {
+      position: static;
+    }
+    .inner {
+      padding-top: 10px;
+      padding-bottom: 8px;
+    }
+    .site,
+    .label-oc {
+      font-size: 1.02rem;
+    }
+    nav {
+      gap: 2px 14px;
+    }
+  }
+</style>

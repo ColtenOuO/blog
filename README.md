@@ -42,6 +42,23 @@ npm run build    # 輸出到 dist/
 
 文章有圖片時，建議一篇一個資料夾（`index.md` + 圖片）。
 
+## 開放式課程
+
+一門課一個資料夾，放在 `src/content/courses/<課程>/`：
+
+```
+src/content/courses/competitive-programming/
+├── course.yaml        # title（中文課名）、en（英文課名，顯示在左上角）、description、parts（單元分組順序）
+├── 01-what-is-cp.md   # 每個單元一個檔案，網址是 /courses/<課程>/<檔名>/
+└── 02-complexity.md
+```
+
+單元的 frontmatter：`title`、`unit`（單元編號，決定排序）必填；`description`、`part`（對應 course.yaml 的 parts）、`date`、`draft` 選填。內文寫法跟一般文章一樣（Markdown、程式碼、KaTeX 數學式）。
+
+- `/courses/`：所有課程
+- `/courses/<課程>/`：課程首頁，選擇單元
+- `/courses/<課程>/<單元>/`：單元內容，左側是單元列表與目錄
+
 ## 部署到 Cloudflare Pages
 
 1. 把這個 repo push 到 GitHub
