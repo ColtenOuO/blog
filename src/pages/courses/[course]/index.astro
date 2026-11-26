@@ -14,9 +14,14 @@ interface Props {
   course: Course;
 }
 const { course } = Astro.props;
-const { title, en, description } = course.data;
+const { title, en, description, tags, prerequisites, audience } = course.data;
+// 「準備 APCS 的高中生：已經會…」→ 冒號前加粗
+const splitLabel = (s: string) => {
+  const i = s.indexOf('：');
+  return i > 0 ? { label: s.slice(0, i), text: s.slice(i + 1) } : { text: s };
+};
 const lessons = await getLessons(course.id);
-const groups = groupLessons(course, lessons);
+const groups = groupLessons(lessons);
 const minutes = lessons.reduce((sum, l) => sum + readingTime(l.body), 0);
 ---
 
@@ -28,6 +33,18 @@ const minutes = lessons.reduce((sum, l) => sum + readingTime(l.body), 0);
     <h1>{title}</h1>
     <p class="en-title mono">{en}</p>
     <p class="desc">{description}</p>
+    {
+      tags.length > 0 && (
+        <div class="tags">
+          {tags.map((t) => (
+            <span class="ctag mono">
+              <b>#</b>
+              {t}
+            </span>
+          ))}
+        </div>
+      )
+    }
     <div class="stats mono">
       <span><b>{lessons.length}</b> 個單元</span>
       <span>約 <b>{minutes}</b> 分鐘</span>
@@ -40,6 +57,40 @@ const minutes = lessons.reduce((sum, l) => sum + readingTime(l.body), 0);
       )
     }
   </section>
+
+  {
+    (audience.length > 0 || prerequisites.length > 0) && (
+      <section class="intro">
+        {audience.length > 0 && (
+          <div class="intro-block">
+            <h2 class="intro-title">適合對象</h2>
+            <ul>
+              {audience.map((a) => {
+                const { label, text } = splitLabel(a);
+                return (
+                  <li>
+                    {label && <strong>{label}</strong>}
+                    {label && '：'}
+                    {text}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+        {prerequisites.length > 0 && (
+          <div class="intro-block">
+            <h2 class="intro-title">先備知識</h2>
+            <ul>
+              {prerequisites.map((p) => (
+                <li>{p}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
+    )
+  }
 
   {
     groups.map((g, i) => (
@@ -99,6 +150,42 @@ const minutes = lessons.reduce((sum, l) => sum + readingTime(l.body), 0);
     font-size: 1.08rem;
     margin: 18px 0 0;
     max-width: 760px;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .ctag {
+    padding: 1px 8px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    color: var(--text-muted);
+  }
+  .ctag b {
+    color: var(--accent);
+    font-weight: 500;
+    margin-right: 2px;
+  }
+  .intro {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px 40px;
+    margin-bottom: 48px;
+  }
+  .intro-title {
+    font-size: 1.1rem;
+    margin: 0 0 10px;
+    padding-top: 10px;
+    border-top: 4px solid var(--rule-strong);
+  }
+  .intro ul {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+  .intro li + li {
+    margin-top: 8px;
   }
   .stats {
     display: flex;

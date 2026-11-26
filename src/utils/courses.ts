@@ -23,13 +23,12 @@ export async function getLessons(courseId: string): Promise<Lesson[]> {
   return lessons.sort((a, b) => a.data.unit - b.data.unit);
 }
 
-/** 依 course.yaml 的 parts 把單元分組；沒寫 part 的放最前面 */
-export function groupLessons(course: Course, lessons: Lesson[]): { part?: string; lessons: Lesson[] }[] {
+/** 依單元的 part 分組，組別順序照第一次出現的單元；沒寫 part 的放最前面 */
+export function groupLessons(lessons: Lesson[]): { part?: string; lessons: Lesson[] }[] {
   const groups: { part?: string; lessons: Lesson[] }[] = [];
   const loose = lessons.filter((l) => !l.data.part);
   if (loose.length) groups.push({ lessons: loose });
-  const parts = [...course.data.parts, ...new Set(lessons.map((l) => l.data.part).filter(Boolean) as string[])];
-  for (const part of new Set(parts)) {
+  for (const part of new Set(lessons.map((l) => l.data.part).filter(Boolean) as string[])) {
     const ls = lessons.filter((l) => l.data.part === part);
     if (ls.length) groups.push({ part, lessons: ls });
   }

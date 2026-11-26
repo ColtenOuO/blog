@@ -1,8 +1,16 @@
 # 範例課程：示範課程頁的版面，正式內容可以直接改寫或整個資料夾刪掉
-title: 競技程式入門
-en: Introduction to Competitive Programming
-description: 從評測系統、時間複雜度開始，一路練到前綴和、二分搜尋等最常用的基礎技巧，適合剛開始刷題的同學。
-parts:
-  - 基礎觀念
-  - 基礎技巧
+title: 演算法解題工程
+en: Algorithmic Problem Solving Engineering
+description: 這是一門專為軟體工程師 coding interview 與想挑戰 APCS 的人設計的實戰演算法課程。不只教授解題技巧，而是從問題本質與複雜度分析出發，帶你建立面對陌生題目也能獨立推導的破題思維。
+tags:
+  - 程式解題
+  - 演算法
+  - 資料結構
+prerequisites:
+  - 熟悉至少一種主流程式語言（本課程主要以 C++ / Python 示範）的基本語法、迴圈、陣列與函式呼叫。
+  - 不需要任何競程經驗或進階數學背景。
+audience:
+  - 準備 APCS 檢定的高中生：已經會基礎語法，目標是突破實作題 3 級分、穩拿 4～5 級分。
+  - 準備實習或正職面試的資工系學生 / 轉職者：刷了上百題 LeetCode 卻還是害怕白板題，缺乏系統性的思考框架。
+  - 想打好演算法與資料結構實作基礎的自學者
 order: 1

@@ -33,8 +33,9 @@ const courses = defineCollection({
     title: z.string(), // 中文課名
     en: z.string(), // 英文課名，顯示在課程頁左上角
     description: z.string(),
-    // 單元分組的順序；單元的 part 要對應這裡的名字，沒寫 part 的單元會放在最前面
-    parts: z.array(z.string()).default([]),
+    tags: z.array(z.string()).default([]), // 課程標籤，顯示在課程列表與課程首頁
+    prerequisites: z.array(z.string()).default([]), // 先備知識，一項一段
+    audience: z.array(z.string()).default([]), // 適合對象，一項一段；「：」前的文字會加粗
     order: z.number().default(0),
     draft: z.boolean().default(false),
   }),

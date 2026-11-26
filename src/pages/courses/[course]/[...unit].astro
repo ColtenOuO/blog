@@ -42,7 +42,7 @@ const { course, lesson, lessons, prev, next } = Astro.props;
 const { title, description, unit, part, author, date, updated } = lesson.data;
 const { Content, headings } = await render(lesson);
 const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
-const groups = groupLessons(course, lessons);
+const groups = groupLessons(lessons);
 const viewsKey = `courses/${lesson.id}`;
 ---
 

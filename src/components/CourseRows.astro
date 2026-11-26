@@ -24,11 +24,12 @@ const { courses, empty = '課程準備中。' } = Astro.props;
               <span class="en-name mono">{course.data.en}</span>
               <span class="title">{course.data.title}</span>
               <span class="desc">{course.data.description}</span>
-              {course.data.parts.length > 0 && (
-                <span class="parts">
-                  {course.data.parts.map((p, i) => (
-                    <span class="part mono">
-                      <b>{String(i + 1).padStart(2, '0')}</b> {p}
+              {course.data.tags.length > 0 && (
+                <span class="tags">
+                  {course.data.tags.map((t) => (
+                    <span class="ctag mono">
+                      <b>#</b>
+                      {t}
                     </span>
                   ))}
                 </span>
@@ -118,22 +119,22 @@ const { courses, empty = '課程準備中。' } = Astro.props;
     font-size: 0.94rem;
     margin-top: 4px;
   }
-  .parts {
+  .tags {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
     margin-top: 10px;
   }
-  .part {
+  .ctag {
     padding: 1px 8px;
     border: 1px solid var(--rule);
     border-radius: 999px;
     color: var(--text-muted);
   }
-  .part b {
+  .ctag b {
     color: var(--accent);
     font-weight: 500;
-    margin-right: 6px;
+    margin-right: 2px;
   }
   .meta {
     display: flex;
