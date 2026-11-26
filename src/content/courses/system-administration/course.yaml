@@ -1,0 +1,15 @@
+title: 計算機系統管理
+en: Computer System Administration
+description: 從 Linux 指令、使用者與權限、套件與服務管理開始，到網路設定、備份與監控，帶你建立管理一台伺服器所需的實務能力與思維。
+tags:
+  - Linux
+  - 系統管理
+  - 伺服器
+prerequisites:
+  - 會使用電腦與基本的檔案操作，不需要任何 Linux 經驗。
+  - 有一台作業系統為 Debian Linux 的電腦。
+audience:
+  - 資工系學生：想補足課堂上較少碰到的系統與維運實務。
+  - 想架設自己服務的開發者：需要從零開始管理一台 Linux 伺服器。
+  - 對 DevOps / SRE 職涯有興趣的自學者
+order: 2
